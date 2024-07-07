@@ -9,4 +9,4 @@ Trang web bán các dung cụ làm bánh hoạt động đa nền tảng.
 * Quản lý đơn hàng
 * Quản lý sản phẩm
 * Lên lịch khuyến mãi, voucher
-* ....
+* Cập nhật trạng thái đơn hàng
