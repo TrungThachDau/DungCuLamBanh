@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WebDungCuLamBanh.Models.NhaCungCapModel>
+
+@{
+    ViewData["Title"] = "Nhà cung cấp";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Nhà cung cấp</h1>
+
+<p>
+    <div class="mr-3">
+        <a class="btn btn-primary" asp-action="Create" asp-controller="Supplier" role="button">Thêm 1 nhà cung cấp mới</a>
+    </div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width:25%">
+                Tên nhà cung cấp
+            </th>
+            <th style="width:25%">
+                Địa chỉ
+            </th>
+            <th style="width:25%">
+                Số điện thoại
+            </th>
+            <th>
+                Email
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenNhaCungCap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiaChi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoDienThoai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id_NhaCungCap">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.Id_NhaCungCap">
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

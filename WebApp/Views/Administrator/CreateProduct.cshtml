@@ -1,0 +1,74 @@
+﻿@model WebDungCuLamBanh.Models.DungCuModel
+
+@{
+    ViewData["Title"] = "Sản phẩm";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Thêm sản phẩm</h1>
+
+@ViewBag.Error
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-controller="Administrator" asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TenDungCu" class="control-label">Tên sản phẩm</label>
+                <input asp-for="TenDungCu" class="form-control" type="text" required />
+                <span asp-validation-for="TenDungCu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="GiaNhap" class="form-control" type="hidden" value="0" />
+                <span asp-validation-for="GiaNhap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gia" class="control-label">Giá bán(₫)</label>
+                <input asp-for="Gia" class="form-control" type="number" required />
+                <span asp-validation-for="Gia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="SoLuong" class="form-control" type="hidden" value="0" />
+                <span asp-validation-for="SoLuong" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_LoaiDungCu" class="control-label">Loại</label>
+                <select asp-for="Id_LoaiDungCu" class="form-control" asp-items="ViewBag.Id_LoaiDungCu"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_NhaCungCap" class="control-label">Nhà cung cấp</label>
+                <select asp-for="Id_NhaCungCap" class="form-control" asp-items="ViewBag.Id_NhaCungCap"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_NhaSanXuat" class="control-label">Nhà sản xuất</label>
+                <select asp-for="Id_NhaSanXuat" class="form-control" asp-items="ViewBag.Id_NhaSanXuat"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hình ảnh</label>
+                <input name="imageInput" type="file" class="form-control" value="null" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ThongTin" class="control-label">Thông tin khác (Màu sắc, kích cỡ, hạn sử dụng,...)</label>
+                <textarea asp-for="ThongTin" class="form-control" style="height:200px"></textarea>
+                <span asp-validation-for="ThongTin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoTa" class="control-label">Mô tả</label>
+                <textarea asp-for="MoTa" class="form-control" style="height:500px"></textarea>
+                <span asp-validation-for="MoTa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+<div>
+    <a asp-action="Product">Trở lại danh sách sản phẩm</a>
+</div>

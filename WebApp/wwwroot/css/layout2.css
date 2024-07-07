@@ -1,0 +1,165 @@
+﻿@@import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+@@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&display=swap');
+@@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Rowdies:wght@300;400;700&display=swap');
+body {
+    font-family: "League Spartan" !important,"League Spartan";
+    font-optical-sizing: auto;
+}
+
+@font-face {
+    font-family: 'One UI Sans';
+    src: url('../fonts/(bold) one ui sans.ttf') format('truetype');
+    font-weight: bold;
+}
+@font-face {
+    font-family: 'One UI Sans';
+    src: url('../fonts/(medium) one ui sans.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: 'One UI Sans';
+    src: url('../fonts/(regular) one ui sans.ttf') format('truetype');
+    font-weight:normal;
+}
+@font-face {
+    font-family: "League Spartan", sans-serif;
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'sf-pro';
+    src: url('../fonts/sf-pro.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'roboto';
+    src: url('../fonts/roboto.ttf') format('truetype');
+}
+.container-fluid {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+.mainBody {
+    background-color: #fbf1f1;
+    min-height: 400px;
+}
+.navbar {
+    padding-top: 25px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color:#ffffff !important;
+    padding-bottom:25px;
+}
+
+.navbar a {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+.transparent-search-bar {
+    border: 0;
+    outline: none;
+    background-color: #fbf1f1; /* Độ trong suốt */
+    padding: 20px 20px 20px 40px;
+    border-radius: 20px;
+    background-image: url(/search.svg);
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+}
+.transparent-search-bar::placeholder {
+    color: black;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form input[type="search"] {
+    height: 30px; /* Adjust as needed */
+}
+
+.search-form span {
+    line-height: 30px; /* Adjust to match input height */
+}
+.bgfooter {
+    height:150px;
+    background-image: url(/logo/OIG4.jpg);
+    background-size:auto;
+    background-repeat: repeat;
+    background-position: center;
+}
+.dropmenu {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+/* Xóa dấu chấm đầu dòng của dropdown */
+.nav-item.dropdown .dropdown-toggle::after {
+}
+
+/* Tạo hiệu ứng hover */
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Thiết lập giao diện cho dropdown-menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 20px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+    /* Thiết lập giao diện cho các mục trong dropdown-menu */
+    .dropdown-menu li {
+        list-style: none;
+    }
+
+        /* Thiết lập giao diện cho các liên kết trong dropdown-menu */
+        .dropdown-menu li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 5px 10px;
+        }
+
+            /* Hiệu ứng hover cho các liên kết trong dropdown-menu */
+            .dropdown-menu li a:hover {
+                background-color: #f5f5f5;
+            }
+.card-bottom {
+    margin-bottom: 20px;
+    background-color:white !important;
+}
+.badge {
+    background-color: transparent;
+}
+
+    .badge.non-zero {
+        background-color: red; /* Thay đổi màu sắc tùy ý */
+        color: white; /* Màu chữ cho badge khi có số lượng */
+    }
+.supportlink p:hover, .supportlink a:hover {
+    text-decoration: underline;
+    color: black;
+}
+.supportlink p, .supportlink a {
+    text-decoration: none; /* Không gạch chân mặc định */
+    color:black;
+}
+.poetsen-one-regular {
+    font-family: "Poetsen One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.rowdies-bold {
+    font-family: "Rowdies", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+

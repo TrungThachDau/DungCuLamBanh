@@ -1,0 +1,50 @@
+﻿@model WebDungCuLamBanh.Models.admin.CategoryViewModel;
+
+@{
+    ViewData["Title"] = "Thể loại";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Loại sản phẩm</h1>
+<div class="d-flex justify-content-left" style="margin-right:10px">
+    <div class="mr-3">
+        <form asp-controller="Administrator" asp-action="CreateCategory" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                <input name="TenLoaiDungCu" class="form-control" placeholder="Thêm loại sản phẩm" />
+                <span asp-validation-for="NewCategory.TenLoaiDungCu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Category) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenLoaiDungCu)
+            </td>
+            <td>
+                    <a asp-action="DeleteCategory" asp-route-id="@item.Id_LoaiDungCu">
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+                    </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

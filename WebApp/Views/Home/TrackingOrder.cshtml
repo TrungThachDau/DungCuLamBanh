@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "Tra cứu đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="p-3 p-sm-4 p-lg-5" style="height:100px;padding-top:50px;margin-bottom:50px;">
+    <h4>Tra cứu đơn hàng</h4>
+    <div class="col-md-5 align-content-center">
+        <input style="border-radius:20px;" id="inputField" type="text" class="form-control" placeholder="Nhập mã đơn hàng" aria-describedby="addon-wrapping">
+        <br/>
+        <button style="border-radius:20px;background-color:#f8d9d6;color:#49130e" onclick="openUrl()" type="button" class="btn mb-3">Xác nhận</button>
+    </div>
+</div>
+<script>
+    function openUrl() {
+        // Lấy giá trị từ ô input
+        var inputValue = document.getElementById('inputField').value;
+        // Tạo đường dẫn mới chứa giá trị của ô input
+        var newUrl = '/Account/OrderDetail/' + encodeURIComponent(inputValue);
+        // Mở đường dẫn mới trong một tab mới
+        window.open(newUrl, '_blank');
+    }
+</script>
+

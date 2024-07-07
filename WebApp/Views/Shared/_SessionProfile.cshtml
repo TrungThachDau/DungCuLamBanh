@@ -1,0 +1,34 @@
+﻿@model WebDungCuLamBanh.Models.SessionProfileModel
+
+@{
+    if (ViewBag.Email == null)
+    {
+        <div>
+            <button style="height:44px; color: black;border-radius:20px" class="btn my-2 my-sm-0" type="submit" asp-action="SignIn" asp-controller="Account">
+                <b>
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                </b>
+            </button>
+        </div>
+
+    }
+    else if (ViewBag.Email != null)
+    {
+        <div class="dropdown dropstart">
+            <button style="height:44px;border-radius:20px;color:black" class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="material-symbols-outlined">
+                    person
+                </span>
+            </button>
+            <ul class="shadow animated--grow-in dropdown-menu">
+                <li><a class="dropdown-item text-dark" href="/Account/Edit/@Model.Uid">Quản lý tài khoản</a></li>
+                <li><a class="dropdown-item text-dark" href="/Account/History/@Model.Uid">Lịch sử đơn hàng</a></li>
+                <li><a class="dropdown-item text-dark" href="/Account/ChangePassword/@Model.Uid">Đổi mật khẩu</a></li>
+                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="SignOut">Đăng xuất</a></li>
+            </ul>
+        </div>
+    }
+}
+

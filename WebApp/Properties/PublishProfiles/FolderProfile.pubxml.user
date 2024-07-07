@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-06-16T16:19:54.4619033Z||;True|2024-05-17T20:24:03.8314550+07:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=35.208.41.83,1433%3bDatabase=qlbandungcu%3bUser Id=sa%3bPassword=Android17x%40%3bMultipleActiveResultSets=true%3bEncrypt=false%3bTrustServerCertificate=true%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

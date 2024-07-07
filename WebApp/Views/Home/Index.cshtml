@@ -1,0 +1,277 @@
+﻿@{
+    var banner = ViewData["Banner"] as List<WebDungCuLamBanh.Models.BannerModel>;
+    var newProduct = ViewData["NewProduct"] as List<WebDungCuLamBanh.Models.DungCuModel>;
+    var khuyenMai = ViewData["KhuyenMai"] as List<WebDungCuLamBanh.Models.DungCuModel>;
+    var phantramkm = ViewData["PhanTramKM"];
+}
+@using WebDungCuLamBanh.Helpers
+@{
+    ViewData["Title"] = "Dụng cụ làm bánh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/toast_style.css" rel="stylesheet" />
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Rowdies:wght@300;400;700&display=swap');
+    bg. {
+        <img src="~/logo/Designer.jpeg" alt="Alternate Text" />
+    }
+
+    .product img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5%;
+        }
+
+        .product details {
+            position: relative;
+            visibility: visible;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+    left {
+        margin-block: 20px;
+        border: 3px solid white;
+        text-align: left;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 25px;
+        font-family: Sans-serif, sans-serif;
+        font-weight: 600;
+    }
+
+    right {
+        margin-block: 20px;
+        text-align: right;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 20px;
+        font-family: Sans-serif, serif;
+    }
+
+    .carousel-caption h1 {
+        font-size: 5vw; /* Thay đổi kích thước chữ */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: black; /* Thay đổi màu chữ nếu cần */
+        font-family: cursive;
+        font-weight: bold;
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 2vw; /* Đệm để tạo khoảng cách giữa chữ và khung */
+        border-radius: 10px; /* Tạo bo tròn cho khung */
+    }
+
+    .carousel-caption {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px; /* This sets the gap between cards */
+    }
+
+    .card-newpd {
+        flex: 0 0 auto; /* This allows the card to have a fixed width */
+        width:110px; /* This sets the card width */
+        background-color: #fbf1f1;
+        border-radius: 20px;
+
+    }
+
+    @@media screen and (min-width: 768px) {
+        .card {
+            width: 240px; /* Kích thước khi màn hình lớn */
+        }
+    }
+    .card-title{
+        font-size:13px;
+        text-decoration:none;
+    }
+
+    @@media screen and (min-width: 768px) {
+        .card-title {
+            font-size: 20px;
+            text-decoration: none;
+        }
+    }
+    .card:hover {
+        /* background-color: #f8d9d6; */
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .league-spartan {
+        font-family: "League Spartan", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: bold;
+        font-style: normal;
+    }
+</style>
+<div class="p-3 p-sm-4 p-lg-5" style="padding-top:0!important;">
+    <div class="row">
+    @if(banner != null && banner.Count != 0)
+    {
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                @for (var i = 0; i < banner.Count; i++)
+                {
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="true" aria-label="Slide @(i + 1)"></button>
+                }
+            </div>
+            <div class="carousel-inner">
+                @for (var i = 0; i < banner.Count; i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <a href="@banner[i].LienKet">
+                            <img src="@banner[i].DuongDan" class="d-block w-100"  alt="">
+                            <div class="carousel-caption d-none d-md-block">
+                                @if (i == 0)
+                                {
+                                    @* <h1>WELCOME TO WHISK & FLOURISH!</h1> *@
+                                }
+                            </div>
+                        </a>                       
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div></div>
+    }
+</div>
+@if(khuyenMai != null && khuyenMai.Count != 0)
+{
+    <div style="background-color:white;border-radius:20px;margin-top:30px;padding:20px;">
+        <div class="row" style="text-align:center">
+            <h3 class="align-center league-spartan">GIẢM GIÁ DÀNH CHO BẠN</h3>
+        </div>
+            <div class="row" style="text-align:right">
+                <a style="text-decoration:none;color:black;" asp-action="SaleOff" asp-controller="Home" class="align-right">Xem thêm</a>
+            </div>
+        <div class="card-container align-center">
+            @foreach (var item in khuyenMai)
+            {
+
+                <div class="card card-newpd" onclick="navigateToLink('/Product/Detail/@Html.DisplayFor(modelItem => item.Id_DungCu)')">
+                    <img src="@item.HinhAnh" class="card-img-top" style="border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" alt="">
+                    <div class="card-body">
+                        <a class="card-title"><b>@item.TenDungCu</b></a>
+                    </div>
+                    @if (item.GiaKhuyenMai == 0 || item.GiaKhuyenMai == null)
+                    {
+                        <div class="card-body">
+                            <a class="card-text league-spartan" style="color:gray;text-decoration:none"><b>@Html.FormatCurrency(item.Gia.Value)</b></a>
+                            </div>
+                        }
+                        else
+                        {
+                            {
+                                int giakm = 100  -(int)(item.GiaKhuyenMai / item.Gia * 100);
+                                <div class="card-body">
+                                    <a class="card-text league-spartan" style="color:red;text-decoration:none"><b>@Html.FormatCurrency(item.GiaKhuyenMai.Value)</b></a>
+                                    <a class="card-text league-spartan" style="color:gray;text-decoration:none"><del>@Html.FormatCurrency(item.Gia.Value)</del></a>
+                                    <span style="background-color:#f8d9d6;color:red;font-size:15px;margin-bottom:1px" class="badge">-@giakm%</span>
+                                </div>
+                            }
+                        
+                    }
+                </div>
+            }
+
+
+        </div>
+    </div>
+    
+}
+else
+{
+    <div></div>
+}
+    <div style="background-color:white;border-radius:20px;margin-top:30px;padding:20px;">
+        <div class="row" style="text-align:center">
+            <h3 class="align-center league-spartan">SẢN PHẨM MỚI RA MẮT</h3>
+        </div>
+        <div class="card-container align-center">
+        @foreach(var item in newProduct)
+            {
+                <div class="card card-newpd" onclick="navigateToLink('/Product/Detail/@Html.DisplayFor(modelItem => item.Id_DungCu)')">
+                    <img src="@item.HinhAnh" class="card-img-top" style="border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" alt="">
+                    <div class="card-body">
+                        <a class="card-title"><b>@item.TenDungCu</b></a>
+                    </div>
+                    @if (item.GiaKhuyenMai == 0 || item.GiaKhuyenMai == null)
+                    {
+                        <div class="card-body">
+                            <a class="card-text league-spartan" style="color:red;text-decoration:none"><b>@Html.FormatCurrency(item.Gia.Value)</b></a>
+                        </div>
+                    }
+                    else
+                    {
+                        {
+                            int giakm = 100 - (int)(item.GiaKhuyenMai / item.Gia * 100);
+                            <div class="card-body">
+                                <a class="card-text league-spartan" style="color:red;text-decoration:none"><b>@Html.FormatCurrency(item.GiaKhuyenMai.Value)</b></a>
+                                <a class="card-text league-spartan" style="color:gray;text-decoration:none"><del>@Html.FormatCurrency(item.Gia.Value)</del></a>
+                                <span style="background-color:#f8d9d6;color:red;font-size:15px;margin-bottom:1px" class="badge">-@giakm%</span>
+                            </div>
+                        }
+                    }                                  
+                </div>
+            }
+            
+
+        </div>
+    </div>
+    </div>
+    
+
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="width:300px;">
+        <div class="toast-body">
+            <a>Trang web này sử dụng các công nghệ như cookie để kích hoạt chức năng thiết yếu của trang web, khi bạn truy cập trang web nghĩa là bạn đã chấp nhận chính sách bảo mật của chúng tôi.</a>
+            <div class="mt-2 pt-2 border-top">
+      
+      <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast">Tôi đã hiểu</button>
+    </div>
+  </div>    
+</div>
+</div>
+
+<script src="~/js/cookie-toast.js"></script>
+<script>
+    function navigateToLink(link) {
+        window.location.href = link;
+    }
+</script>
