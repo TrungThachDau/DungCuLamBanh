@@ -29,10 +29,6 @@
                 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        
-                        @* <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">Giới thiệu</a>
-                        </li> *@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
                                 Sản phẩm
@@ -53,9 +49,7 @@
                                 <li><a class="dropdown-item" asp-action="Index" asp-controller="Product">Tất cả sản phẩm</a></li>
                                 <li><a class="dropdown-item" href="/Product/Index?SortColumn=6">Sản phẩm bán chạy</a></li>
                             </ul>
-@*                         <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FindStore">Tìm cửa hàng</a>
-                        </li> *@
+
                         <li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SaleOff">Giảm giá</a>
                         </li>
@@ -87,8 +81,6 @@
 
                             </ul>
                         </li>
-                        
-
                     </ul>
 
 
@@ -172,7 +164,7 @@
             </main>
         </div>
         
-        <div @* style="background-color:#fbf1f1" *@>
+        <div>
             <footer class="footer p-3 p-sm-4 p-lg-5">
                 <div class="container-fluid">
                     <div class="row">
