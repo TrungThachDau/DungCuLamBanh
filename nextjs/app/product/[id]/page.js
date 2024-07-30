@@ -20,8 +20,9 @@ export default async function Product({ params }) {
                 </div>
                 <div className={"col-md-6"}>
                     <h2>{product.tenSanPham}</h2>
-                    <p>{product.moTa}</p>
-                    <p>Price: ${product.gia}</p>
+                    <p>Số lượng: {product.soLuong}</p>
+                    <p>Loại sản phẩm: {product.loaiSanPham.tenLoaiSanPham}</p>
+                    <p>Price: {product.gia}</p>
                     <button className={"btn btn-primary"}>Add to Cart</button>
                 </div>
             </div>

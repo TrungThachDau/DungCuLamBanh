@@ -1,37 +1,28 @@
-import Head from 'next/head';
-import Script from "next/script";
-import Navbar from "../components/Navbar";
 import React from "react";
-import styles from "../app/page.module.css";
-import Footer from "../components/footer";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Script from "next/script";
+import Navbar from "@/component/layout/navbar";
+import Footer from "@/component/layout/footer";
+export const metadata = {
+  title: "Whisk and Flourish",
+  description: "Whisk and Flourish",
+};
+
 export default function RootLayout({ children }) {
-    return (
-        <html lang="en">
-        <head>
-            <meta charSet="UTF-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <link
+  return (
+      <html lang="en">
+      <head>
+          <title></title>
+          <link
                 rel="stylesheet"
                 href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
             />
-            <link
-                href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap"
-                rel="stylesheet"
-            />
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-            />
-        </head>
-        <body>
-        <Navbar/>
-        <div className={`container-fluid ${styles.mainBody}`}>
-            <div>
-                <main role={"main"} className={"pb3 container-fluid"}>
-                    {children}
-                </main>
-            </div>
-        </div>
+      </head>
+      <body>
+        <Navbar />
+      <div>
+          {children}
+      </div>
         <Footer/>
         <Script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -39,7 +30,8 @@ export default function RootLayout({ children }) {
             crossOrigin="anonymous"
             strategy="afterInteractive"
         />
-        </body>
-        </html>
-    );
+      </body>
+      
+      </html>
+  );
 }
