@@ -1,0 +1,52 @@
+﻿@model WebDungCuLamBanh.Models.KhachHangModel
+@{
+    
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<style>
+</style>
+<div style="text-align:center">
+    <img src="/logo/Whisk &Flourisk.svg" width="130px"  alt=""/>
+</div>
+<div class="col-md-12" style="background-color:#fff8f6;border-radius:20px;margin-bottom:20px">
+    @if (ViewBag.Error != null)
+    {
+        <br />
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+    <!-- Form Đăng Ký -->
+    <form asp-controller="Account" asp-action="SignUp2">
+        
+        <br />
+        @* <div class="form-group md-4">
+
+            <input style="border-radius:20px" asp-for="Email" type="email" id="registerEmail" class="form-control" placeholder="Email" required />
+        </div>
+        <br />
+        <div class="form-group md-4">
+
+            <input style="border-radius:20px" name="password" type="password" id="registerPassword" class="form-control" placeholder="Mật khẩu" required />
+        </div> *@
+        <div class="form-floating mb-3">
+            <input style="background-color:#fff8f6" type="text" class="form-control" id="floatingInput" asp-for="TenKhachHang" placeholder="name@example.com">
+            <label for="floatingInput">Tên của bạn</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input style="background-color:#fff8f6" type="email" class="form-control" Địa chỉ email id="floatingInput" asp-for="Email" placeholder="name@example.com">
+              <label for="floatingInput">Địa chỉ Email</label>
+        </div>
+            <div class="form-floating">
+            <input style="background-color:#fff8f6" type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
+              <label for="floatingPassword">Mật khẩu</label>
+            </div>
+        <br />
+        <p>
+            Bằng cách nhấn vào đăng ký nghĩa là bạn đã đồng ý với <a href="/Home/Privacy">chính sách và điều khoản dịch vụ</a> của chúng tôi.
+        </p>
+        <br />
+        @* <button style="border-radius:20px" action="SignUp" type="submit" class="btn btn-primary btn-block mb-3">Đăng kí</button> *@
+        <button style="width:100%;border-radius:20px;background-color:#f8d9d6" value="SignUp" type="submit" class="btn mb-4"><b>Đăng ký</b></button>
+    </form>
+</div>

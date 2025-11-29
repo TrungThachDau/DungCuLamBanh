@@ -1,0 +1,40 @@
+﻿@model WebDungCuLamBanh.Models.BannerModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>BannerModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TenBanner" class="control-label">Tên Banner</label>
+                <input asp-for="TenBanner" class="form-control" />
+                <span asp-validation-for="TenBanner" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hình ảnh</label>
+                <input name="imageInput" type="file" class="form-control" value="null" />
+            </div>
+            <div class="form-group">
+                <label asp-for="LienKet" class="control-label">Liên kết đến</label>
+                <input asp-for="LienKet" class="form-control" />
+                <span asp-validation-for="LienKet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

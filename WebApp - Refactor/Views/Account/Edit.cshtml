@@ -1,0 +1,131 @@
+﻿@model WebDungCuLamBanh.Models.KhachHangModel
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .breadcrumb-item a {
+        color: gray;
+        text-decoration: none;
+    }
+
+    .list-group-item {
+        background-color: #fbf1f1; /* Adjust as needed */
+        border-radius: 20px;
+        border:none;
+    }
+
+    .list-group-item:hover {
+        background-color: #f8d9d6; /* Adjust as needed */
+        border-radius: 20px;
+    }
+    .list-group-item a{
+        text-decoration:none;
+            color: #49130e;
+    }
+
+    form input {
+        border-radius: 20px!important; /* Adjust the value as needed */
+    }
+
+
+</style>
+<div class="p-3 p-sm-4 p-lg-5" style="padding-top:0!important;">
+    <div class="row">
+        <nav style="--bs-breadcrumb-divider: '>'; padding-top:20px" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/Account/Edit/@ViewBag.uid">Tài khoản</a></li>
+                <li class="breadcrumb-item " aria-current="page">Thông tin</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group" style="border-radius:20px">
+                <li style="background-color: #f8d9d6;" class="list-group-item current"><a href="/Account/Edit/@Model.Id_KhachHang"><b>Tài khoản</b></a></li>
+                <li class="list-group-item"><a href="/Account/History/@Model.Id_KhachHang">Lịch sử đơn hàng</a></li>
+                <li class="list-group-item"><a href="/Account/ChangePassword/@Model.Id_KhachHang">Mật khẩu và bảo mật</a></li>
+                <li class="list-group-item"><a asp-action="FavoriteProduct" asp-controller="Account">Sản phẩm yêu thích</a></li>
+                <li class="list-group-item"><a asp-action="Notification" asp-controller="Account">Thông báo</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-8" style="padding:30px">
+            @{
+                if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+            }
+            <h3>Xin chào, @Model.TenKhachHang</h3>
+            <br />
+            <h5>Tổng quan</h5>
+            <div style="border-radius:20px;padding:10px;background-color:white">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <td><b>Email</b></td>
+                            <td><b>Điểm tích luỹ</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.Email</td>
+                            <td>@Model.DiemThuong điểm</td>
+                        </tr>
+
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <td><b>Số điện thoại</b></td>
+                            <td><b>Địa chỉ</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.SoDienThoai</td>
+                            <td>@Model.DiaChi</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <br />
+            <h5>Cập nhật thông tin</h5>
+            <br />
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id_KhachHang" />
+                <input type="hidden" asp-for="Email" />
+                <div class="form-floating mb-3">
+                    <input asp-for="TenKhachHang" type="text" class="form-control" id="floatingInput" placeholder="example@email.com">
+                    <label for="floatingInput">Tên của bạn</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="SoDienThoai" type="text" class="form-control" id="floatingInput" placeholder="example@email.com">
+                    <label for="floatingInput">Số điện thoại</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="DiaChi" type="text" class="form-control" id="floatingInput" placeholder="example@email.com">
+                    <label for="floatingInput">Địa chỉ</label>
+                </div>
+                <br />
+                <div class="form-group">
+                    <button style="border-radius:20px;background-color:#f8d9d6;color:#49130e" type="submit" value="Lưu thay đổi" class="btn"><b>Lưu thay đổi</b></button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Lỗi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .bg {
+        padding: 10px; /* Thiết lập padding với giá trị dương hợp lệ */
+        background-image: url(''); /* Đường dẫn đến hình ảnh nền */
+        background-position: leftt; /* Canh giữa hình ảnh nền */
+    }
+</style>
+<div class="row bg">
+    <div class="col-md-6 emoji text-center">
+    </div>
+    <div class="col-md-6 error-content" style="padding-top:100px">
+        <div class="alert alert-danger" role="alert">
+            <h1></h1>
+            <h1>Lỗi từ phía chúng tôi</h1>
+            <p>Đã xảy ra lỗi khi xử lí yêu cầu của bạn...</p>
+            @if (Model.ShowRequestId)
+            {
+                <p>
+                    <strong>Mã yêu cầu:</strong> <code>@Model.RequestId</code>
+                </p>
+            }
+            <p>
+                <strong>Mô tả lỗi:</strong> <code>@Model.Message</code>
+            </p>
+            <a href="/" style="text-decoration:none;font-weight:bold;color:red">Quay lại Trang chủ.</a>
+        </div>
+
+    </div>
+
+</div>
+
+
+

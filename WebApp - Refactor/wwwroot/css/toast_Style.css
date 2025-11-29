@@ -1,0 +1,28 @@
+﻿.toast {
+    width: 400px; /* Điều chỉnh chiều rộng của Toast */
+    min-height: 100px; /* Điều chỉnh chiều cao tối thiểu của Toast */
+    font-size: 1.2rem; /* Tăng kích thước font */
+}
+
+.toast-header {
+    padding: 0.75rem 1rem; /* Điều chỉnh padding của tiêu đề */
+    font-size: 1.2rem; /* Tăng kích thước font của tiêu đề */
+}
+
+.toast-body {
+    padding: 1rem; /* Điều chỉnh padding của phần thân */
+    font-size: 1.1rem; /* Tăng kích thước font của nội dung */
+}
+
+.toast-container {
+    padding: 2rem; /* Điều chỉnh padding của container */
+}
+
+.toast img {
+    width: 30px; /* Tăng kích thước hình ảnh */
+    height: auto; /* Giữ tỷ lệ hình ảnh */
+}
+
+.toast .btn-close {
+    transform: scale(1); /* Phóng to nút đóng */
+}

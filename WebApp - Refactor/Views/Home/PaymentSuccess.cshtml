@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Thanh toán thành công!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var paymentData = ViewBag.payment;
+}
+<style>
+    .bg {
+        height: 500px;
+        padding: 10px; /* Thiết lập padding với giá trị dương hợp lệ */
+        background-image: url('/logo/Thanh toán thành công!.png'); /* Đường dẫn đến hình ảnh nền */
+        background-size: cover; /* Đảm bảo hình ảnh phủ kín toàn bộ phần tử */
+        background-repeat: no-repeat; /* Không lặp lại hình ảnh nền */
+        background-position: center; /* Canh giữa hình ảnh nền */
+    }
+</style>
+<div class="row bg" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <div class="alert alert-danger col-md-4" role="alert" style="border-radius:20px">
+        <h1>
+            <span class="material-symbols-outlined">
+                task_alt
+            </span>
+        </h1>
+        <h4>Thanh toán thành công!</h4>
+        <p>Cảm ơn bạn đã mua hàng tại Whisk & Flourish. Một email xác nhận đơn hàng sẽ được gửi đến bạn.
+            (Nếu không tìm thấy vui lòng kiểm tra hộp thư Rác)
+        </p>
+        <div>
+            <a style="border:none;border-radius:20px;color:black" type="button" class="btn btn-light d-inline-block mr-2" asp-action="Index" asp-controller="Home">Trang chủ</a>
+            <a style="border-radius:20px;" type="button" class="btn btn-secondary d-inline-block" href="/Account/OrderDetail/@ViewBag.donhang">Đơn hàng</a>
+        </div>
+
+    </div>
+    
+</div>
+
+

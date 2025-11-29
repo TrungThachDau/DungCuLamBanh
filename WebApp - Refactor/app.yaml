@@ -1,0 +1,6 @@
+runtime: aspnetcore
+runtime_config:
+    operating_system: "ubuntu22"
+env: flex
+
+entrypoint: dotnet WebDungCuLamBanh.dll 

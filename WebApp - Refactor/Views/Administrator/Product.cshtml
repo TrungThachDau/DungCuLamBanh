@@ -1,0 +1,95 @@
+﻿﻿
+@{
+    ViewData["Title"] = "Sản phẩm";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+@using WebDungCuLamBanh.Helpers;
+@model IEnumerable<WebDungCuLamBanh.Models.DungCuModel>
+
+<h1>Tất cả sản phẩm</h1>
+
+<div class="d-flex justify-content-left" style="margin-right:10px">
+    <div class="mr-3">
+        <a class="btn btn-primary" asp-action="CreateProduct" role="button">Thêm 1 sản phẩm mới</a>
+    </div>
+
+    <div class="mr-3">
+        <form asp-action="Product" asp-controller="Administrator" method="get" class="search-form">
+            <input class="form-control col-sm-12 transparent-search-bar" type="search" name="search" placeholder="Tìm sản phẩm..." required>
+            <input type="submit" value="Search" style="display: none;">
+        </form>
+    </div>
+    <p>
+        <a style="margin-right:15px;" asp-action="Product"> <button type="button" class="btn btn-primary">Bỏ tìm kiếm</button></a>
+    </p>
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Mã
+            </th>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Giá
+            </th>
+            <th>
+                Số lượng
+            </th>
+            <th style="width:15%">
+                Loại
+            </th>
+            <th>
+                Hình ảnh
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.Id_DungCu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenDungCu)
+                </td>
+                <td style="text-align:right">
+                    @Html.FormatCurrency(item.Gia.Value)
+                </td>
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.SoLuong) cái
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoaiDungCu.TenLoaiDungCu)
+                </td>
+                <td>
+                    <img src="@item.HinhAnh" width="70" height="70" alt=""/>
+
+                </td>
+                <td>
+                    <a asp-action="EditProduct" asp-route-id="@item.Id_DungCu">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </a>
+                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.Id_DungCu">
+                        <span class="material-symbols-outlined">
+                            info
+                        </span>
+                    </a> 
+                    <a asp-action="Delete" asp-route-id="@item.Id_DungCu">
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,319 @@
+﻿@using WebDungCuLamBanh.Helpers
+@model HistoryViewModel
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!--suppress HtmlDeprecatedAttribute -->
+<style>
+    .breadcrumb-item a {
+        color: gray;
+        text-decoration: none;
+    }
+
+    .list-group-item {
+        background-color: #fbf1f1; /* Adjust as needed */
+        border-radius: 20px;
+        border: none;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8d9d6; /* Adjust as needed */
+            border-radius: 20px;
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: #49130e;
+        }
+
+    form input {
+        border-radius: 20px !important; /* Adjust the value as needed */
+    }
+
+</style>
+<div class="p-3 p-sm-4 p-lg-5" style="padding-top:0!important;">
+    <div class="row">
+        <nav style="--bs-breadcrumb-divider: '>'; padding-top:20px" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/Account/Edit/@ViewBag.uid">Tài khoản</a></li>
+                <li class="breadcrumb-item " aria-current="page">Thông tin</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group" style="border-radius:20px">
+                <li class="list-group-item"><a href="/Account/Edit/">Tài khoản</a></li>
+                <li style="background-color: #f8d9d6;" class="list-group-item current"><a href="/Account/History"><b>Lịch sử đơn hàng</b></a></li>
+                <li class="list-group-item"><a href="/Account/ChangePassword">Mật khẩu và bảo mật</a></li>
+                <li class="list-group-item"><a asp-action="FavoriteProduct" asp-controller="Account">Sản phẩm yêu thích</a></li>
+                <li class="list-group-item"><a asp-action="Notification" asp-controller="Account">Thông báo</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-8" style="">
+
+            <h5>Lịch sử đơn hàng</h5>
+            <a>Hiển thị thông tin các sản phẩm bạn đã mua tại shop</a>
+            <br />
+            <br />
+
+            @if (Model==null||Model.donHangVanChuyenModels == null)
+            {
+                <p>Không tìm thấy đơn hàng</p>
+            }
+            else if (Model.donHangVanChuyenModels.Count == 0)
+            {
+                <p>Không có đơn hàng nào</p>
+            }
+            else
+            {
+                <div style="overflow-x: auto;border-radius:20px;padding:10px;background-color:white">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Mã đơn hàng</th>
+                                <th>Sản phẩm</th>
+                                <th width="20%">Tổng tiền</th>
+                                <th width="20%">Phương thức</th>
+                            </tr>
+                        </thead>
+                        <tbody class="">
+
+                            @foreach (var item in Model.donHangVanChuyenModels)
+                            {
+                                @if(item.TinhTrang==0)
+                                {
+                                    <tr class="table-warning">
+                                        
+                                        <td>
+                                                @Html.DisplayFor(modelItem => item.DonHang.NgayDat)
+                                        </td>
+                                        <td>
+                                            <a href="/Account/OrderDetail/@item.Id_DonHang" title="@Html.DisplayFor(modelItem => item.Id_DonHang)">
+                                                    @if (item.Id_DonHang.Length > 15)
+                                                    {
+
+                                                        @item.Id_DonHang.Substring(27)
+                                                        ;
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.Id_DonHang)
+                                                    }
+                                            </a>
+                                        </td>
+
+                                        <td style="padding-left:20px">
+                                                @{
+                                                    int displayedCount = 0; // Biến đếm số lượng sản phẩm đã hiển thị
+                                                }
+
+                                                @foreach (var item1 in Model.chiTietDonHangModel)
+                                                {
+                                                    if (item1.Id_DonHang == item.Id_DonHang)
+                                                    {
+                                                    <li>@Html.DisplayFor(modelItem => item1.DungCu.TenDungCu)</li>
+                                                        displayedCount++;
+
+                                                        if (displayedCount >= 2)
+                                                        {
+                                                        <link /> <!-- Hiển thị nút xem thêm -->
+                                                            @: <li>...</li>
+                                                            break; // Dừng vòng lặp
+                                                        }
+                                                    }
+                                                }
+                                        </td>
+                                        <td>
+                                            @Html.FormatCurrency(item.DonHang.TongTien.Value)
+                                                
+                                        </td>
+                                        <td>
+
+                                                @item.PhuongThucThanhToan.TenPTTT
+
+                                        </td>
+                                        
+                                    </tr>
+                                }
+                                else if(item.TinhTrang==1)
+                                {
+                                    <tr class="table-info">
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DonHang.NgayDat)
+                                        </td>
+                                        <td>
+                                            <a href="/Account/OrderDetail/@item.Id_DonHang" title="@Html.DisplayFor(modelItem => item.Id_DonHang)">
+                                                @if (item.Id_DonHang.Length > 15)
+                                                {
+
+                                                    @item.Id_DonHang.Substring(27)
+                                                    ;
+
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Id_DonHang)
+                                                }
+                                            </a>
+                                        </td>
+
+                                        <td style="padding-left:20px">
+                                            @{
+                                                int displayedCount = 0; // Biến đếm số lượng sản phẩm đã hiển thị
+                                            }
+
+                                            @foreach (var item1 in Model.chiTietDonHangModel)
+                                            {
+                                                if (item1.Id_DonHang == item.Id_DonHang)
+                                                {
+                                                    <li>@Html.DisplayFor(modelItem => item1.DungCu.TenDungCu)</li>
+                                                    displayedCount++;
+
+                                                    if (displayedCount >= 2)
+                                                    {
+                                                        <link /> <!-- Hiển thị nút xem thêm -->
+                                                        @: <li>...</li>
+                                                        break; // Dừng vòng lặp
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.FormatCurrency(item.DonHang.TongTien.Value)
+
+                                        </td>
+                                        <td>
+
+                                            @item.PhuongThucThanhToan.TenPTTT
+
+                                        </td>
+
+                                    </tr>
+                                }
+                                else if(item.TrangThaiVanChuyen.TenTrangThai=="Đã giao hàng")
+                                {
+                                    <tr class="table-success">
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DonHang.NgayDat)
+                                        </td>
+                                        <td>
+                                            <a href="/Account/OrderDetail/@item.Id_DonHang" title="@Html.DisplayFor(modelItem => item.Id_DonHang)">
+                                                @if (item.Id_DonHang.Length > 15)
+                                                {
+
+                                                    @item.Id_DonHang.Substring(27)
+                                                }
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Id_DonHang)
+                                                }
+                                            </a>
+                                        </td>
+
+                                        <td style="padding-left:20px">
+                                            @{
+                                                int displayedCount = 0; // Biến đếm số lượng sản phẩm đã hiển thị
+                                            }
+
+                                            @foreach (var item1 in Model.chiTietDonHangModel)
+                                            {
+                                                if (item1.Id_DonHang == item.Id_DonHang)
+                                                {
+                                                    <li>@Html.DisplayFor(modelItem => item1.DungCu.TenDungCu)</li>
+                                                    displayedCount++;
+
+                                                    if (displayedCount >= 2)
+                                                    {
+                                                        <link /> <!-- Hiển thị nút xem thêm -->
+                                                        @: <li>...</li>
+                                                        break; // Dừng vòng lặp
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.FormatCurrency(item.DonHang.TongTien.Value)
+
+                                        </td>
+                                        <td>
+
+                                            @item.PhuongThucThanhToan.TenPTTT
+
+                                        </td>
+
+                                    </tr>
+                                }
+                                else if(item.TinhTrang==3)
+                                {
+                                    <tr class="table-danger">
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DonHang.NgayDat)
+                                        </td>
+                                        <td>
+                                            <a href="/Account/OrderDetail/@item.Id_DonHang" title="@Html.DisplayFor(modelItem => item.Id_DonHang)">
+                                                @if (item.Id_DonHang.Length > 15)
+                                                {
+
+                                                    @item.Id_DonHang.Substring(27)
+                                                }
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Id_DonHang)
+                                                }
+                                            </a>
+                                        </td>
+
+                                        <td style="padding-left:20px">
+                                            @{
+                                                int displayedCount = 0; // Biến đếm số lượng sản phẩm đã hiển thị
+                                            }
+
+                                            @foreach (var item1 in Model.chiTietDonHangModel)
+                                            {
+                                                if (item1.Id_DonHang == item.Id_DonHang)
+                                                {
+                                                    <li>@Html.DisplayFor(modelItem => item1.DungCu.TenDungCu)</li>
+                                                    displayedCount++;
+
+                                                    if (displayedCount >= 2)
+                                                    {
+                                                        <link /> <!-- Hiển thị nút xem thêm -->
+                                                        @: <li>...</li>
+                                                        break; // Dừng vòng lặp
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.FormatCurrency(item.DonHang.TongTien.Value)
+
+                                        </td>
+                                        <td>
+
+                                            @item.PhuongThucThanhToan.TenPTTT
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                        }
+                    </table>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>

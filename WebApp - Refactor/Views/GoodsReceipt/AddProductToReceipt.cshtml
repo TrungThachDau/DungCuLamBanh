@@ -1,0 +1,189 @@
+﻿@{
+    var hoaDon = ViewData["HoaDon"] as WebDungCuLamBanh.Models.HoaDonNhapHangModel;
+    var cthdNhapHang = ViewData["CTHDNhapHang"] as List<WebDungCuLamBanh.Models.CTHDNhapHangModel>;
+}
+@using WebDungCuLamBanh.Helpers
+@{
+    ViewData["Title"] = "Hoá đơn nhập hàng";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+@{
+    int dem = 1;
+}
+<div class="row">
+    @if (hoaDon != null)
+    {
+        <div>
+            <h2>Hóa Đơn @hoaDon.Id_HoaDonNhap</h2>
+            <p><strong>Ngày lập hoá đơn:</strong> @Html.FormatTime(hoaDon.NgayLapHoaDon.Value)</p>
+            @if(hoaDon.NgayNhapHang != null)
+            {
+                <p><strong>Ngày nhập hàng:</strong> @Html.FormatTime(hoaDon.NgayNhapHang.Value)</p>
+            }
+            else
+            {
+                <p><strong>Ngày nhập hàng:</strong> Chưa nhập hàng</p>
+            }
+            
+            <p><strong>Tên nhà cung cấp:</strong> @hoaDon.NhaCungCap.TenNhaCungCap</p>
+            <p><strong>Địa chỉ nhà cung cấp:</strong> @hoaDon.NhaCungCap.DiaChi</p>
+            <p><strong>Số điện thoại nhà cung cấp:</strong> @hoaDon.NhaCungCap.SoDienThoai</p>
+            <p><strong>Email nhà cung cấp:</strong> @hoaDon.NhaCungCap.Email</p>
+
+            <p><strong>Tổng Tiền: </strong>@Html.FormatCurrency(hoaDon.TongTien.Value)</p>
+            @if(hoaDon.NhanVienLap != null)
+            {
+                <p><strong>Người nhập hàng:</strong> @hoaDon.NhanVienLap</p>
+            }
+            else
+            {
+                <p><strong>Người nhập hàng:</strong> Chưa nhập hàng</p>
+            }
+            <!-- Hiển thị các trường khác của hóa đơn tại đây -->
+        </div>
+    }
+    else
+    {
+        <p>Hóa đơn không tồn tại.</p>
+    }
+    <!-- Button trigger modal -->
+    @if(hoaDon.TrangThai==0)
+    {
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        Thêm sản phẩm
+        </button>
+    }
+    else if (hoaDon.TrangThai==1)
+    {
+        <div></div>
+    }
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addProductModalLabel">Thêm sản phẩm</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="FormAddProduct">
+                    <input name="MaHD" value="@hoaDon.Id_HoaDonNhap" type="hidden" />
+
+                    <div class="form-group">
+                        <label  class="control-label">Sản phẩm</label>
+                        <select name="Id_SanPham" class="form-control" asp-items="ViewBag.SanPham"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Số lượng</label>
+                        <input name="SoLuong" type="number" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Đơn giá</label>
+                        <input name="DonGia" type="number" class="form-control" />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="addProductToReceipt()">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+<table class="table table-hover table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên sản phẩm</th>
+      <th scope="col">Số lượng</th>
+      <th scope="col">Đơn giá</th>
+      <th scope="col">Thành tiền</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in cthdNhapHang)
+      {
+          <tr>
+              <th scope="row">@dem</th>
+              <td>@item.SanPham.TenDungCu</td>
+              <td style="text-align:right">@item.SoLuong cái</td>
+              <td style="text-align:right">@Html.FormatCurrency(item.DonGia.Value)</td>
+              <td style="text-align:right">@Html.FormatCurrency(item.GiaTien.Value)</td>
+              @if(hoaDon.TrangThai==0)
+                {
+                    <td>
+                            <form method="post" asp-action="DeleteProduct">
+                                <input type="hidden" name="MaHD" value="@hoaDon.Id_HoaDonNhap" />
+                            <input type="hidden" name="Id" value="@item.Id_CTHDNhapHang" />
+                            <input style="border-radius:20px;border:none;" type="submit" value="x" />
+                            </form>
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+
+          </tr>
+                {
+                    dem = dem + 1;
+                }
+                
+
+      }
+  </tbody>
+</table>
+    @if (hoaDon.TrangThai == 0 && cthdNhapHang.Count != 0)
+    {
+        <div class="row">
+            <button type="button" class="btn btn-danger" onclick="importProduct()">Tiến hành nhập hàng</button>
+        </div>
+    }
+    else if (hoaDon.TrangThai==1)
+    {
+        <div class="row">
+            <button type="button" class="btn btn-success" disabled>Đã nhập hàng</button>
+        </div>
+    }
+
+
+</div>
+
+<script>
+    function addProductToReceipt() {
+        var formData = new FormData(document.getElementById('FormAddProduct'));
+        $.ajax({
+            url: '@Url.Action("AddProductToReceipt", "GoodsReceipt")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.success===true) {
+                    location.reload();
+                }
+                else {
+                    alert(result.error);
+                }
+
+            }
+        });
+    }
+    function importProduct() {
+
+        $.ajax({
+            url: '@Url.Action("ImportProduct", "GoodsReceipt")',
+            type: 'POST',
+            data: { MaHD: '@hoaDon.Id_HoaDonNhap' },
+            success: function (result) {
+                if (result.success === true) {
+                    window.location.href = '/GoodsReceipt/Index';
+                }
+                else {
+                    alert(result.error);
+                }
+
+            }
+        });
+    }
+</script>
+
+
+

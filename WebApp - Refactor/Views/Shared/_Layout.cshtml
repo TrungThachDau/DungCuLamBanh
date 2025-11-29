@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"] | Whisk & Flourish</title>
+    <link rel="icon" href="~/logo/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="~/css/layout2.css" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+</head>
+<body>
+
+    <script src="~/js/cart.js"></script>
+    <div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-2">
+            <div class="container">
+                <button style="border:none" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="material-symbols-outlined">
+                        menu
+                    </span>
+                </button>
+                <a style="margin-left:50px;" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="/logo/Whisk &Flourisk.svg" width="70px" /></a>
+                
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sản phẩm
+                            </a>
+                            <ul class="dropdown-menu dd">
+                                <li>
+                                    @{
+                                        if (ViewBag.idspvuaxem == null)
+                                        {
+                                            <a class="dropdown-item" aria-current="page">Sản phẩm vừa xem</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" href="/Product/Detail/@ViewBag.idspvuaxem">Sản phẩm vừa xem</a>
+                                        }
+                                    }
+                                </li>
+                                <li><a class="dropdown-item" asp-action="Index" asp-controller="Product">Tất cả sản phẩm</a></li>
+                                <li><a class="dropdown-item" href="/Product/Index?SortColumn=6">Sản phẩm bán chạy</a></li>
+                            </ul>
+
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SaleOff">Giảm giá</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TrackingOrder">Tra cứu đơn hàng</a>
+                        </li>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                Về chúng tôi
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-action="About" asp-controller="Home">Giới thiệu</a></li>
+                                <li><a class="dropdown-item" asp-action="Privacy" asp-controller="Home">Thông báo bảo mật</a></li>
+                                <li><a class="dropdown-item" asp-action="MembershipPolicy" asp-controller="Home">Quyền lợi khách hàng</a></li>
+                            </ul>
+
+                        </li>
+                        
+                        <li class="nav-item">
+
+                            <ul>
+                                <div class="search-container">
+                                    <form asp-action="Index" asp-controller="Product" method="get" class="search-form">
+                                        <input class="col-sm-12 transparent-search-bar" type="search" name="search" placeholder="Tìm sản phẩm..." required>
+                                        <input type="submit" value="Search" style="display: none;">
+                                    </form>
+                                </div>
+
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <form class="form-inline my-2 my-lg-0 d-flex justify-content-between">
+                    <div>
+                        <div class="dropstart" style="position: relative">
+                            <button aria-expanded="false" data-bs-toggle="dropdown" style="width:50px;border-radius:20px; color: black;" class="btn my-2 my-sm-0 ml-2" type="submit">
+                                <span class=" material-symbols-outlined" style="position: relative; z-index: 1;">
+                                    shopping_bag
+                                </span>
+                                <span class="badge text-bg-danger" style="position: absolute; top: -2px; right: -2px; color: black; border-radius: 50%; padding: 2px 6px; font-size: 12px; z-index: 2;"><a id="badgeCount">0</a></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="alertsDropdown"
+                                 style="width:240px;"
+                                >
+                                <table class="table minicart">
+                                    <tbody id="product-list">
+                                        <tr>
+                                            <td><a style="font-size:9px">Giỏ hàng trống</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <a class="dropdown-item text-center btn btn-dark" style="font-size:9px" asp-action="Index" asp-controller="Cart">Xem giỏ hàng</a>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div>
+                        <button style="height:44px; color: black;border-radius:20px" class="btn my-2 my-sm-0" type="submit" asp-action="Notification" asp-controller="Account">
+                            <b>
+                                <span class="material-symbols-outlined">
+                                    notifications
+                                </span>
+                            </b>
+                        </button>
+                    </div>
+                    @{
+                        if (ViewBag.email == null)
+                        {
+                            <div>
+                                <button style="height:44px; color: black;border-radius:20px" class="btn my-2 my-sm-0" type="submit" asp-action="SignIn" asp-controller="Account">
+                                    <b>
+                                        <span class="material-symbols-outlined">
+                                            person
+                                        </span>
+                                    </b>
+                                </button>
+                            </div>
+
+                        }
+                        else if (ViewBag.email != null)
+                        {
+                            <div class="dropdown dropstart">
+                                <button style="height:44px;border-radius:20px;color:black" class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-symbols-outlined">
+                                        person
+                                    </span>
+                                </button>
+                                <ul class="shadow animated--grow-in dropdown-menu">
+                                    <li><a class="dropdown-item text-dark" href="/Account/Edit/@ViewBag.uid">Quản lý tài khoản</a></li>
+                                    <li><a class="dropdown-item text-dark" href="/Account/History/@ViewBag.uid">Lịch sử đơn hàng</a></li>
+                                    <li><a class="dropdown-item text-dark" href="/Account/ChangePassword/@ViewBag.uid">Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="SignOut">Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        }
+                    }
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid mainBody">
+        <div>
+            <main role="main" class="pb-3 container-fluid">
+                @RenderBody()
+            </main>
+        </div>
+        
+        <div>
+            <footer class="footer p-3 p-sm-4 p-lg-5">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card card-bottom" style=";border-radius:20px;box-shadow:inherit">
+                                <div class="card-body">
+                                    <table>
+                                        <tr>
+                                            <th class="row">
+                                                <div class="col-4">
+                                                    <img src="~/customer-service.png" class="rounded float-start" width="70px">
+                                                </div>
+                                                <div class="col-8">
+                                                    <a style="font-size:12px">Liên hệ với chúng tôi</a><br/>
+                                                    <a style="color:gray;font-size:12px">+84 369 132 321</a>
+                                                </div>
+                                            </th>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-bottom" style=";border-radius:20px;box-shadow:inherit">
+                                <div class="card-body">
+                                    <table>
+                                        <tr>
+                                            <th class="row">
+                                                <div class="col-4">
+                                                    <img src="~/delivery-truck.png" class="rounded float-start" width="70px">
+                                                </div>
+                                                <div class="col-8">
+                                                    <a style="font-size:12px">Giao hàng toàn quốc</a><br/>
+                                                    <a style="color:gray;font-size:12px">63 tỉnh thành tối đa 5 ngày</a>
+                                                </div>
+                                            </th>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-bottom card-support" style=";border-radius:20px;box-shadow:inherit">
+                                <div class="card-body">
+                                    <table>
+                                        <tr>
+                                            <th class="row">
+                                                <div class="col-4">
+                                                    <img src="~/dairy-products.png" class="rounded float-start" width="70px">
+                                                </div>
+                                                <div class="col-8">
+                                                    <a style="font-size:12px">Sản phẩm chất lượng</a><br/>
+                                                    <a style="color:gray;font-size:12px">An toàn, xuất xứ rõ ràng</a>
+                                                </div>
+                                            </th>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-bottom" style=";border-radius:20px;box-shadow:inherit">
+                                <div class="card-body">
+                                    <table>
+                                        <tr>
+                                            <th class="row">
+                                                <div class="col-4">
+                                                    <img src="~/price-tag.png" class="rounded float-start" width="70px">
+                                                </div>
+                                                <div class="col-8">
+                                                    <a style="font-size:12px">Giá cả, ưu đãi tốt</a><br />
+                                                    <a style="color:gray;font-size:12px">Tích điểm trên mỗi đơn hàng</a>
+                                                </div>
+                                            </th>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <br />
+        </div>
+    </div>
+    
+    <div>
+        <div class="container-fluid p-3 p-sm-4 p-lg-5">
+           <div class="row" style="padding:15px">
+                <a>Bản quyền thuộc về © @DateTime.Now.Year Whisk & Flourish. Mọi quyền được bảo lưu.</a>
+           </div>
+            <div class="row" style="padding:15px">
+                <div class="col-md-3 supportlink">
+                    <p><b>VỀ CHÚNG TÔI</b></p>
+                        <p>Công ty TNHH Whisk Flourish</>
+                        <p>Địa chỉ: 123 Đồng Khởi, Bến Nghé, Quận 1, Sài Gòn</p>
+                        <p>Email: contact@whiskflourish.vn</p>
+               </div>
+                
+                <div class="col-md-3 supportlink">                 
+                        <p><b>HỖ TRỢ</b></p>
+                    <p><a asp-action="DeliveryPolicy" asp-controller="Home">Chính sách giao hàng</a></p>
+                    <p><a asp-action="MembershipPolicy" asp-controller="Home">Chính sách thành viên</a></p>
+                    <p><a asp-action="ExchangePolicy" asp-controller="Home">Chính sách đổi trả</a></p>
+                    <p><a asp-action="Privacy" asp-controller="Home">Chính sách bảo mật</a></p>
+                      
+                </div>
+                
+                <div class="col-md-4 supportlink">
+                    <p><b>HỆ THỐNG CỬA HÀNG TẠI SÀI GÒN</b></p>
+                    <p><a href="https://maps.app.goo.gl/xtiAttc63AopQHxn7">123 Đ. Đồng Khởi, Bến Nghé, Quận 1</a></p>
+                    <p><a href="https://maps.app.goo.gl/ud2mAVRfThp4ryAq6">66 Đ. Song Hành, An Phú, Quận 2</a></p>
+                    <p><a href="https://maps.app.goo.gl/NQLeHTGbko2pkNjP8">17 Đ. Đồng Xoài, Phường 13, Tân Bình</a></p>
+                    <p><a href="https://maps.app.goo.gl/GugywubpmNcgGxvb6">82 Đ. Chợ Lớn, Bình Phú, Quận 6</a></p>
+                </div>
+                <div class="col-md-2">
+                    <img src="~/B_cong_th_ng_2.png" class="rounded float-start" width="200px" />
+                    <img src="~/logo/logodai.png" height="40px"/>
+                </div>
+           </div>
+       </div>
+
+
+            
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            updateCartBadge();
+            miniCart(uid='@ViewBag.uid');
+        });
+
+    </script>
+    
+    <script src="~/js/checkCloseTab.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js" integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>

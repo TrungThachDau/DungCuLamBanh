@@ -1,0 +1,200 @@
+﻿@{    
+    var khuyenMai = ViewData["KhuyenMai"] as List<WebDungCuLamBanh.Models.DungCuModel>;
+}
+@using WebDungCuLamBanh.Helpers
+@{
+    ViewData["Title"] = "Giảm giá";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Rowdies:wght@300;400;700&display=swap');
+
+    bg. {
+        <img src="~/logo/Designer.jpeg" alt="Alternate Text" />
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .product {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5%;
+        }
+
+        .product details {
+            position: relative;
+            visibility: visible;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+    left {
+        margin-block: 20px;
+        border: 3px solid white;
+        text-align: left;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 25px;
+        font-family: Sans-serif;
+        font-weight: 600;
+    }
+
+    right {
+        margin-block: 20px;
+        text-align: right;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 20px;
+        font-family: Sans-serif;
+    }
+
+    .carousel-caption h1 {
+        font-size: 5vw; /* Thay đổi kích thước chữ */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: black; /* Thay đổi màu chữ nếu cần */
+        font-family: cursive;
+        font-weight: bold;
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 2vw; /* Đệm để tạo khoảng cách giữa chữ và khung */
+        border-radius: 10px; /* Tạo bo tròn cho khung */
+    }
+
+    .carousel-caption {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px; /* This sets the gap between cards */
+    }
+
+    .card-newpd {
+        flex: 0 0 auto; /* This allows the card to have a fixed width */
+        width: 120px; /* This sets the card width */
+        background-color: #fbf1f1;
+        border-radius: 20px;
+    }
+
+    @@media screen and (min-width: 768px) {
+        .card {
+            width: 240px; /* Kích thước khi màn hình lớn */
+        }
+    }
+
+    .card-title {
+        font-size: 13px;
+        text-decoration: none;
+    }
+
+    @@media screen and (min-width: 768px) {
+        .card-title {
+            font-size: 20px;
+            text-decoration: none;
+        }
+    }
+
+    .card:hover {
+        /* background-color: #f8d9d6; */
+        border-radius: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .league-spartan {
+        font-family: "League Spartan", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: bold;
+        font-style: normal;
+    }
+</style>
+<div class="p-3 p-sm-4 p-lg-5" style="padding-top:0px!important;">
+    <div class="row">
+        <div style="background-color:white;border-radius:20px;margin-top:30px;padding:0px;">
+            <img src="~/saleoff.png" class="img-fluid" style="border-radius:20px">
+        </div>
+        
+    </div>
+    <div class="row">
+        @if (khuyenMai != null && khuyenMai.Count != 0)
+        {
+            <div style="background-color:white;border-radius:20px;margin-top:30px;padding:20px;">
+                <div class="card-container align-center">
+                    @foreach (var item in khuyenMai)
+                    {
+                        <div class="card card-newpd" onclick="navigateToLink('/Product/Detail/@Html.DisplayFor(modelItem => item.Id_DungCu)')">
+                            <img src="@item.HinhAnh" class="card-img-top" style="border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
+                            <div class="card-body">
+                                <a class="card-title"><b>@item.TenDungCu</b></a>
+                            </div>
+                            @if (item.GiaKhuyenMai == 0 || item.GiaKhuyenMai == null)
+                            {
+                                <div class="card-body">
+                                    <a class="card-text league-spartan" style="color:gray;text-decoration:none"><b>@Html.FormatCurrency(item.Gia.Value)</b></a>
+                                </div>
+                            }
+                            else
+                            {
+                                {
+                                    int giakm = 100 - (int)(item.GiaKhuyenMai / item.Gia * 100);
+                                    <div class="card-body">
+                                        <a class="card-text league-spartan" style="color:red;text-decoration:none"><b>@Html.FormatCurrency(item.GiaKhuyenMai.Value)</b></a>
+                                        <a class="card-text league-spartan" style="color:gray;text-decoration:none"><del>@Html.FormatCurrency(item.Gia.Value)</del></a>
+                                        <span style="background-color:#f8d9d6;color:red;font-size:15px;mar-bottom:1px" class="badge">-@giakm%</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert" style="border-radius:20px;margin-top:30px;">
+                Rất tiếc, hiện chưa có chương trình Giảm giá nào. 😢
+            </div>
+        }
+    </div>
+</div>
+<script src="~/js/cookie-toast.js"></script>
+<script>
+    function navigateToLink(link) {
+        window.location.href = link;
+    }
+</script>
+

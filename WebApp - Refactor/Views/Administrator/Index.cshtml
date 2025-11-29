@@ -1,0 +1,73 @@
+﻿@model WebDungCuLamBanh.Models.AdminModel
+@{
+    ViewData["Title"] = "Đăng nhập vào trang quản trị";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="/logo/Whisk &Flourisk.svg" width="70px" /></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark">Trang quản trị</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+                <hr />
+          <h2>Chào mừng đến với trang quản trị bán hàng</h2>
+                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/9019759f347a781f.png"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form asp-action="Index">
+          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            <p class="lead fw-normal mb-0 me-3">Đăng nhập</p>
+            
+          </div>
+          <br/>
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input asp-for="TenNguoiDung" type="text" class="form-control form-control-lg"
+              placeholder="Tên người dùng" required/>
+            
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <input asp-for="MatKhau" type="password" class="form-control form-control-lg"
+              placeholder="Mật khẩu" required/>            
+          </div>
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg"
+              style="padding-left: 2.5rem; padding-right: 2.5rem;">Đăng nhập</button>     
+          </div>
+        </form>
+
+        @if(ViewBag.Error != null)
+                {
+                    <br />
+                    <div class="alert alert-danger" role="alert">
+                        @ViewBag.Error
+                    </div>
+                }
+                
+       
+      </div>
+    </div>
+  </div>
+  
+</section>
+
