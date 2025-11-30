@@ -20,6 +20,24 @@ namespace WebDungCuLamBanh
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure()));
 
+            // Add Swagger
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                // Only include API controllers (exclude MVC controllers)
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var controllerActionDescriptor = apiDesc.ActionDescriptor as Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor;
+                    if (controllerActionDescriptor != null)
+                    {
+                        // Only include controllers with [ApiController] attribute
+                        return controllerActionDescriptor.ControllerTypeInfo
+                            .GetCustomAttributes(typeof(Microsoft.AspNetCore.Mvc.ApiControllerAttribute), true).Any();
+                    }
+                    return false;
+                });
+            });
+
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddResponseCompression();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -82,6 +100,14 @@ namespace WebDungCuLamBanh
             builder.Services.AddScoped<IHomeService, HomeService>();
 
             var app = builder.Build();
+
+            // Configure Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Admin API v1");
+                c.RoutePrefix = "swagger"; // Access at /swagger
+            });
 
             // Configure the HTTP request pipeline.
             app.UseExceptionHandler("/Error");
