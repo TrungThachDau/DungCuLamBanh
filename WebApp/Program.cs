@@ -65,6 +65,22 @@ namespace WebDungCuLamBanh
             builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
             builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 
+            // Customer/Account services
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+            // Cart services
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<ICartService, CartService>();
+
+            // Product services
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
+            // Home services
+            builder.Services.AddScoped<IHomeRepository, HomeRepository>();
+            builder.Services.AddScoped<IHomeService, HomeService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
