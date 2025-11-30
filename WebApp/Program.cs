@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using WebDungCuLamBanh.Data;
+using WebDungCuLamBanh.Repositories;
+using WebDungCuLamBanh.Services;
 
 namespace WebDungCuLamBanh
 {
@@ -59,6 +61,9 @@ namespace WebDungCuLamBanh
                 options.Providers.Add<GzipCompressionProvider>();
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "image/svg+xml" });
             });
+
+            builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+            builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 
             var app = builder.Build();
 
