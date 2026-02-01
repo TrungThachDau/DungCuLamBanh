@@ -1,0 +1,30 @@
+services:
+  webdungculambanh:
+    image: webdungculambanh
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=qldungcu;User Id=sa;Password=Android17x@;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=true;"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Android17x@"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$${SA_PASSWORD}\" -Q \"SELECT 1\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+volumes:
+  sqlserver_data:
