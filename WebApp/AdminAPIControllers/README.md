@@ -7,6 +7,10 @@ Các REST API controllers cho quản trị hệ thống. Tất cả endpoints đ
 https://localhost:{port}/api
 ```
 
+## Authentication (JWT)
+- **POST** `/api/Administrator/Login` để nhận JWT token cho admin (quyen = 1).
+- Đính kèm token cho mọi request khác qua header: `Authorization: Bearer {token}`.
+
 ## Controllers
 
 ### 1. ManufactorController
@@ -212,4 +216,4 @@ Invoke-RestMethod -Uri "https://localhost:7234/api/Manufactor" -Method Post -Bod
 - Sử dụng `[ApiController]` attribute cho automatic model validation
 - Route pattern: `/api/[controller]`
 - Hỗ trợ cả JSON và FormData (cho upload file)
-- Không cần authentication token (chưa implement), có thể thêm JWT sau
+- Bảo vệ bởi JWT Bearer token, lấy token qua `/api/Administrator/Login` và gửi trong header `Authorization: Bearer {token}`

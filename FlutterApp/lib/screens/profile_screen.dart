@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:whiskflourish/config/app_env.dart';
 import 'package:whiskflourish/screens/about_screen.dart';
 import 'package:whiskflourish/screens/order2_screen.dart';
 import 'package:whiskflourish/screens/signin_screen.dart';
@@ -17,7 +18,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late Future<Customer> _customer;
-  
+
   @override
   void initState() {
     super.initState();
@@ -66,12 +67,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Gọi hàm clearSession
                   await clearSession(),
 
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                  ),
+                  if (context.mounted)
+                    {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignInScreen(),
+                        ),
+                      ),
+                    }
                 }
             },
             itemBuilder: (BuildContext context) {
@@ -133,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: double.infinity, // Chiều rộng 100%
                     child: ElevatedButton(
                       onPressed: () async {
-                        const url = 'http://34.150.89.227/Account/Edit';
+                        final url = AppEnv.account('/Account/Edit').toString();
                         // ignore: deprecated_member_use
                         if (await canLaunch(url)) {
                           // ignore: deprecated_member_use
@@ -145,29 +149,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: const Text('Cập nhật thông tin'),
                     ),
                   ),
-                  
                   const Divider(),
                   SizedBox(
-                    width:double.infinity,
+                    width: double.infinity,
                     child: ElevatedButton(
-                    onPressed: () async {
-                     //Mở màn hình Order
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Order2Screen(),
-                      ),
-                    );
-                    },
-                    child: const Text('Đơn hàng của bạn'),
+                      onPressed: () async {
+                        //Mở màn hình Order
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Order2Screen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Đơn hàng của bạn'),
+                    ),
                   ),
-                ),
-                  
                   const SizedBox(height: 10),
                   const Divider(),
-
                 ],
-                
               ),
             );
           } else {
@@ -175,7 +175,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         },
       ),
-    
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:whiskflourish/config/app_env.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.initState();
     controller = WebViewController()
       ..loadRequest(
-        Uri.parse('http://34.150.89.227/Account/SignUp/'),
+        AppEnv.account('/Account/SignUp/'),
       );
   }
   @override

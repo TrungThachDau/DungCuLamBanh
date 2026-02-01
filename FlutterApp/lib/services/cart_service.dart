@@ -1,7 +1,8 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:whiskflourish/config/app_env.dart';
 
 class CartItem {
   final int id;
@@ -32,8 +33,7 @@ class CartService {
   Future<List<CartItem>> getCartItems() async {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/cart/$uid'));
+    final response = await http.get(AppEnv.api('/api/cart/$uid'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data.map((json) => CartItem.fromJson(json)).toList();
@@ -50,8 +50,7 @@ class CartService {
     }
 
     var uid = await getUserIdFromSharedPreferences();
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/cart/total/$uid'));
+    final response = await http.get(AppEnv.api('/api/cart/total/$uid'));
     if (response.statusCode == 200) {
       return double.parse(response.body);
     } else {

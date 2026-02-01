@@ -1,10 +1,10 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:whiskflourish/config/app_env.dart';
 
 class ProductService {
   Future<List<Product>> getProducts() async {
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/sanpham'));
+    final response = await http.get(AppEnv.api('/api/sanpham'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -14,8 +14,7 @@ class ProductService {
     }
   }
   Future<List<Product>> getSaleOffProducts() async {
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/sanpham/khuyenmai'));
+    final response = await http.get(AppEnv.api('/api/sanpham/khuyenmai'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -25,8 +24,7 @@ class ProductService {
     }
   }
   Future<List<Product>> getNewProduct() async {
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/sanpham/newproduct'));
+    final response = await http.get(AppEnv.api('/api/sanpham/newproduct'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);

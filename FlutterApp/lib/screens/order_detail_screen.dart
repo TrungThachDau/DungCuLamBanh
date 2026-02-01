@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:whiskflourish/config/app_env.dart';
 
 
 class OrderDetailScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     super.initState();
     controller = WebViewController()
       ..loadRequest(
-        Uri.parse('http://34.150.89.227/Account/OrderDetail2/${widget.order}'),
+        AppEnv.account('/Account/OrderDetail2/${widget.order}'),
       );
   }
   @override

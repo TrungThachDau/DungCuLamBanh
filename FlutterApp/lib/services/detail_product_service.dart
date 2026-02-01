@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:whiskflourish/config/app_env.dart';
 
 class ProductDetail{
   final int id;
@@ -40,7 +41,7 @@ class ProductDetail{
 }
 class DetailProductService{
   Future<ProductDetail> getProductDetail(int id) async {
-    final response = await http.get(Uri.parse('http://34.150.89.227/api/sanpham/$id'));
+    final response = await http.get(AppEnv.api('/api/sanpham/$id'));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       return ProductDetail.fromJson(data);

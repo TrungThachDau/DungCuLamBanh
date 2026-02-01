@@ -1,22 +1,32 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using WebDungCuLamBanh.Models;
 using WebDungCuLamBanh.Services;
 
 namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class AdministratorController : ControllerBase
     {
         private readonly IAdministratorService _administratorService;
+        private readonly IConfiguration _configuration;
 
-        public AdministratorController(IAdministratorService administratorService)
+        public AdministratorController(IAdministratorService administratorService, IConfiguration configuration)
         {
             _administratorService = administratorService;
+            _configuration = configuration;
         }
 
         // POST: api/Administrator/Login
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(AdminModel adminModel)
         {
             try
@@ -24,9 +34,13 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 var admin = await _administratorService.AuthenticateAsync(adminModel);
                 if (admin != null && admin.Quyen == 1)
                 {
+                    var token = GenerateJwtToken(admin);
+
                     return Ok(new { 
                         success = true, 
                         message = "Đăng nhập thành công",
+                        token = token.Token,
+                        expires = token.Expires,
                         data = new {
                             tenNguoiDung = admin.TenNguoiDung,
                             ten = admin.Ten,
@@ -368,6 +382,34 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         {
             var options = await _administratorService.GetProductFormOptionsAsync();
             return Ok(options);
+        }
+
+        private (string Token, DateTime Expires) GenerateJwtToken(AdminModel admin)
+        {
+            var jwtSection = _configuration.GetSection("Jwt");
+            var key = jwtSection["Key"] ?? throw new InvalidOperationException("JWT signing key is missing.");
+            var expires = DateTime.UtcNow.AddMinutes(double.TryParse(jwtSection["AccessTokenMinutes"], out var minutes) ? minutes : 120);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, admin.TenNguoiDung ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Email, admin.Email ?? string.Empty),
+                new Claim(ClaimTypes.Name, admin.TenNguoiDung ?? string.Empty),
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim("quyen", admin.Quyen.ToString())
+            };
+
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: jwtSection["Issuer"],
+                audience: jwtSection["Audience"],
+                claims: claims,
+                expires: expires,
+                signingCredentials: credentials);
+
+            return (new JwtSecurityTokenHandler().WriteToken(token), expires);
         }
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whiskflourish/services/cart_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:whiskflourish/config/app_env.dart';
+import 'package:whiskflourish/services/cart_service.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -103,7 +104,8 @@ class _CartScreenState extends State<CartScreen> {
                                   10), // Khoảng cách giữa tổng cộng và nút thanh toán
                           ElevatedButton(
                             onPressed: () async {
-                              const url = 'http://35.223.233.219/Cart/CheckOut';
+                              final url =
+                                  AppEnv.web('/Cart/CheckOut').toString();
                               // ignore: deprecated_member_use
                               if (await canLaunch(url)) {
                                 // ignore: deprecated_member_use

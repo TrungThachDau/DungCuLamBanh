@@ -1,30 +1,33 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:whiskflourish/config/app_env.dart';
 
-class Order{
+class Order {
   final String idOrder;
-  final DateTime OrderDate;
-  final double Total;
-  final String Status;
-  Order({required this.idOrder, required this.OrderDate, required this.Total, required this.Status});
-  factory Order.fromJson(Map<String, dynamic> json){
+  final DateTime orderDate;
+  final double total;
+  final String status;
+  Order(
+      {required this.idOrder,
+      required this.orderDate,
+      required this.total,
+      required this.status});
+  factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
       idOrder: json['id_DonHang'],
-      OrderDate: DateTime.parse(json['donHang']['ngayDat']),
-      Total: json['donHang']['tongTien'].toDouble(),
-      Status: json['trangThaiVanChuyen']['tenTrangThai'],
+      orderDate: DateTime.parse(json['donHang']['ngayDat']),
+      total: json['donHang']['tongTien'].toDouble(),
+      status: json['trangThaiVanChuyen']['tenTrangThai'],
     );
   }
-
-
 }
+
 class OrderService {
   Future<List<Order>> getOrderList() async {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
-    final response =
-        await http.get(Uri.parse('http://34.150.89.227/api/Order/$uid'));
+    final response = await http.get(AppEnv.api('/api/Order/$uid'));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data.map((json) => Order.fromJson(json)).toList();

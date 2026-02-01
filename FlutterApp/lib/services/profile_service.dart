@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:whiskflourish/config/app_env.dart';
 class Customer{
   final String id;
   final String name;
@@ -30,7 +31,7 @@ class ProfileService {
 
   Future<Customer> loadProfile(String id) async {
     try {
-      final response = await http.get(Uri.parse('http://34.150.89.227/api/customer/$id'));
+      final response = await http.get(AppEnv.account('/api/customer/$id'));
       if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       return Customer.fromJson(data);

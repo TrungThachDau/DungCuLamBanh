@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:whiskflourish/config/app_env.dart';
 import 'package:whiskflourish/screens/signup_screen.dart';
 import 'package:whiskflourish/widget/navbar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,24 +84,25 @@ class SignInScreen extends StatelessWidget {
 
                     saveSession(auth.currentUser!.uid);
                   } catch (e) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Lỗi'),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Lỗi'),
+                            content: Text(e.toString()),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                     // ignore: use_build_context_synchronously
                   }
                   // Add your sign-in logic here
@@ -109,31 +111,32 @@ class SignInScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () async {
-                      const url = 'http://34.150.89.227/Account/ResetPassword';
-                      // ignore: deprecated_member_use
-                      if (await canLaunch(url)) {
-                        // ignore: deprecated_member_use
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
+                  final url =
+                      AppEnv.account('/Account/ResetPassword').toString();
+                  // ignore: deprecated_member_use
+                  if (await canLaunch(url)) {
+                    // ignore: deprecated_member_use
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
                 child: const Text('Quên mật khẩu?'),
               ),
               const SizedBox(height: 10),
               const Text("Chưa có tài khoản?"),
               ElevatedButton(
-                    onPressed: () async {
-                     //Mở màn hình Order
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpScreen(),
-                      ),
-                    );
-                    },
-                    child: const Text('Đăng ký'),
-                  ),
+                onPressed: () async {
+                  //Mở màn hình Order
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Đăng ký'),
+              ),
             ],
           ),
         ),

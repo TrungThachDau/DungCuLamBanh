@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Repositories;
 using WebDungCuLamBanh.Services;
@@ -40,20 +43,37 @@ namespace WebDungCuLamBanh
 
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddResponseCompression();
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                //.AddCookie(options =>
-                //{
-                //    options.LoginPath = "/Account/SignIn";
-                //    options.AccessDeniedPath = "/Account/AccessDenied";
-                //    options.LogoutPath = "/Account/SignOut";
-                //    options.Cookie.HttpOnly = true;
-                //})
+
+            var jwtSection = config.GetSection("Jwt");
+            var jwtKey = jwtSection["Key"] ?? throw new InvalidOperationException("JWT signing key is missing.");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie()
                 .AddCookie("Firebase", options =>
                 {
                     options.LoginPath = "/Account/SignIn";
                     options.AccessDeniedPath = "/Account/AccessDenied";
                     options.LogoutPath = "/Account/SignOut";
                     options.Cookie.HttpOnly = true;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSection["Issuer"],
+                        ValidAudience = jwtSection["Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                        ClockSkew = TimeSpan.Zero
+                    };
                 });
 
             builder.Services.ConfigureApplicationCookie(options =>

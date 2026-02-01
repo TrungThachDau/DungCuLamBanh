@@ -2,15 +2,19 @@
 
 A new Flutter project.
 
-## Getting Started
+## API environment configuration
 
-This project is a starting point for a Flutter application.
+API, account, and web base URLs are configured through `--dart-define` values:
 
-A few resources to get you started if this is your first Flutter project:
+- `API_BASE_URL`: base for REST endpoints (default `http://localhost:5000`)
+- `ACCOUNT_BASE_URL`: base for account-related pages (default `API_BASE_URL`)
+- `WEB_BASE_URL`: base for web/share URLs (default `API_BASE_URL`)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Run with custom values:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter run \
+  --dart-define=API_BASE_URL=http://10.0.2.2:5000 \
+  --dart-define=ACCOUNT_BASE_URL=https://example.com \
+  --dart-define=WEB_BASE_URL=https://example.com
+```
