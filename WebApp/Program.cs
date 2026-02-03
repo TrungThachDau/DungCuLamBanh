@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Repositories;
 using WebDungCuLamBanh.Services;
@@ -30,8 +31,7 @@ namespace WebDungCuLamBanh
                 // Only include API controllers (exclude MVC controllers)
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
-                    var controllerActionDescriptor = apiDesc.ActionDescriptor as Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor;
-                    if (controllerActionDescriptor != null)
+                    if (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
                     {
                         // Only include controllers with [ApiController] attribute
                         return controllerActionDescriptor.ControllerTypeInfo
