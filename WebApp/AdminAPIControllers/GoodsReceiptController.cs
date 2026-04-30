@@ -9,8 +9,8 @@ namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class GoodsReceiptController(AppDbContext context) : ControllerBase
+    [Route("api/GoodsReceipt")]
+    public class GoodsReceiptApiController(AppDbContext context) : ControllerBase
     {
         // GET: api/GoodsReceipt
         [HttpGet]
@@ -40,7 +40,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
             var hoaDonNhapHangModel = await context.HoaDonNhapHangs
                 .Include(h => h.NhaCungCap)
                 .FirstOrDefaultAsync(m => m.Id_HoaDonNhap == id);
-            
+
             if (hoaDonNhapHangModel == null)
             {
                 return NotFound(new { message = "Không tìm thấy hóa đơn nhập hàng" });

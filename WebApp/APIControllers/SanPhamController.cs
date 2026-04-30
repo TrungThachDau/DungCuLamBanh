@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
 namespace WebDungCuLamBanh.API
 {
@@ -16,10 +17,12 @@ namespace WebDungCuLamBanh.API
     public class SanPhamController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IProductService _productService;
 
-        public SanPhamController(AppDbContext context)
+        public SanPhamController(AppDbContext context, IProductService productService)
         {
             _context = context;
+            _productService = productService;
         }
 
         // GET: api/SanPham
@@ -140,6 +143,43 @@ namespace WebDungCuLamBanh.API
             }
 
             return BadRequest();
+        }
+
+        // GET: api/SanPham/filter
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFilteredProducts(
+            [FromQuery] string search = "",
+            [FromQuery] string sortColumn = "",
+            [FromQuery] int min = 0,
+            [FromQuery] int max = 0,
+            [FromQuery] int page = 1,
+            [FromQuery] string type = "",
+            [FromQuery] string manufacturer = "")
+        {
+            var (products, totalPages, currentPage) = await _productService.GetProductListAsync(
+                search, sortColumn, min, max, page, type, manufacturer);
+
+            return Ok(new
+            {
+                success = true,
+                data = products,
+                totalPages,
+                currentPage
+            });
+        }
+
+        // GET: api/SanPham/filters
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetFilterOptions()
+        {
+            var (categories, manufacturers) = await _productService.GetProductFiltersAsync();
+
+            return Ok(new
+            {
+                success = true,
+                categories = categories.Select(c => new { value = c.Value, text = c.Text }),
+                manufacturers = manufacturers.Select(m => new { value = m.Value, text = m.Text })
+            });
         }
 
         private async Task<string> SearchProduct(string productName)

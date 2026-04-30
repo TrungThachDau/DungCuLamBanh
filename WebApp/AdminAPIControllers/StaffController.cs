@@ -9,8 +9,8 @@ namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class StaffController(AppDbContext context) : ControllerBase
+    [Route("api/Staff")]
+    public class StaffApiController(AppDbContext context) : ControllerBase
     {
         // GET: api/Staff
         [HttpGet]
@@ -25,7 +25,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         {
             var adminModel = await context.Admins
                 .FirstOrDefaultAsync(m => m.TenNguoiDung == id);
-            
+
             if (adminModel == null)
             {
                 return NotFound(new { message = "Không tìm thấy nhân viên" });

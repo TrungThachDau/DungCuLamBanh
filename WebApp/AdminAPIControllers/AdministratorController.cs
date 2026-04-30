@@ -12,13 +12,13 @@ namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class AdministratorController : ControllerBase
+    [Route("api/Administrator")]
+    public class AdminApiController : ControllerBase
     {
         private readonly IAdministratorService _administratorService;
         private readonly IConfiguration _configuration;
 
-        public AdministratorController(IAdministratorService administratorService, IConfiguration configuration)
+        public AdminApiController(IAdministratorService administratorService, IConfiguration configuration)
         {
             _administratorService = administratorService;
             _configuration = configuration;
@@ -36,12 +36,14 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 {
                     var token = GenerateJwtToken(admin);
 
-                    return Ok(new { 
-                        success = true, 
+                    return Ok(new
+                    {
+                        success = true,
                         message = "Đăng nhập thành công",
                         token = token.Token,
                         expires = token.Expires,
-                        data = new {
+                        data = new
+                        {
                             tenNguoiDung = admin.TenNguoiDung,
                             ten = admin.Ten,
                             email = admin.Email,

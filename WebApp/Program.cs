@@ -24,6 +24,18 @@ namespace WebDungCuLamBanh
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure()));
 
+            // Add CORS for Next.js frontend
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("NextJsApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             // Add Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -130,7 +142,14 @@ namespace WebDungCuLamBanh
             });
 
             // Configure the HTTP request pipeline.
-            app.UseExceptionHandler("/Error");
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
             // Cấu hình trang lỗi cho các mã lỗi khác như 404 - Not Found
             app.UseStatusCodePagesWithReExecute("/Error/");
             app.UseHsts();
@@ -157,6 +176,7 @@ namespace WebDungCuLamBanh
             });
             app.UseResponseCompression();
             app.UseRouting();
+            app.UseCors("NextJsApp");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();

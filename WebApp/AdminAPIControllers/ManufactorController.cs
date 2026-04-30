@@ -9,8 +9,8 @@ namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class ManufactorController(AppDbContext context) : ControllerBase
+    [Route("api/Manufactor")]
+    public class ManufactorApiController(AppDbContext context) : ControllerBase
     {
         // GET: api/Manufactor
         [HttpGet]
@@ -25,7 +25,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         {
             var nhaSanXuatModel = await context.NhaSanXuats
                 .FirstOrDefaultAsync(m => m.Id_NhaSanXuat == id);
-            
+
             if (nhaSanXuatModel == null)
             {
                 return NotFound(new { message = "Không tìm thấy nhà sản xuất" });

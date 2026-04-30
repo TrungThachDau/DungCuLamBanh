@@ -62,12 +62,12 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProduct"
                    aria-expanded="true" aria-controls="collapseProduct">
                     <i class="fas fa-fw fa-store"></i>
                     <span>Quản lí sản phẩm</span>
                 </a>
-                <div id="collapseProduct" class="collapse" aria-labelledby="headingProduct" data-parent="#accordionSidebar">
+                <div id="collapseProduct" class="collapse" aria-labelledby="headingProduct" data-bs-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" asp-action="Product" asp-controller="Administrator">Tất cả sản phẩm</a>
                         <a class="collapse-item" asp-action="CreateProduct" asp-controller="Administrator">Thêm sản phẩm</a>
@@ -79,12 +79,12 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseOrder"
                    aria-expanded="true" aria-controls="collapseOrder">
                     <i class="fas fa-fw fa-store"></i>
                     <span>Quản lí đơn hàng</span>
                 </a>
-                <div id="collapseOrder" class="collapse" aria-labelledby="headingOrder" data-parent="#accordionSidebar">
+                <div id="collapseOrder" class="collapse" aria-labelledby="headingOrder" data-bs-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" asp-action="AllOrders" asp-controller="Administrator">Tất cả đơn hàng</a>
                         <a class="collapse-item" asp-action="OrdersNotDelivered" asp-controller="Administrator">Đơn hàng chưa giao</a>
@@ -96,13 +96,13 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUtilities"
                    aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Công cụ</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
+                     data-bs-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" asp-action="SaleOff" asp-controller="Administrator">Giảm giá</a>
                         <a class="collapse-item" asp-action="Voucher" asp-controller="Administrator">Mã giảm giá</a>
@@ -150,7 +150,7 @@
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-search fa-fw"></i>
                             </a>
                             <!-- Dropdown - Messages -->
@@ -176,7 +176,7 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                 <span class="material-symbols-outlined">
                                     person
@@ -187,7 +187,7 @@
                                  aria-labelledby="userDropdown">
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Đăng xuất
                                 </a>
@@ -236,13 +236,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Sẵn sàng đăng xuất?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">Bạn sẽ bị chuyển về trang đăng nhập</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Huỷ</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Huỷ</button>
                     <a class="btn btn-primary" asp-action="SignOut" asp-controller="Administrator">Ok</a>
                 </div>
             </div>
@@ -258,7 +258,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

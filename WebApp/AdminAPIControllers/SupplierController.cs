@@ -9,8 +9,8 @@ namespace WebDungCuLamBanh.AdminAPIControllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class SupplierController(AppDbContext context) : ControllerBase
+    [Route("api/Supplier")]
+    public class SupplierApiController(AppDbContext context) : ControllerBase
     {
         // GET: api/Supplier
         [HttpGet]
@@ -25,7 +25,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         {
             var nhaCungCapModel = await context.NhaCungCaps
                 .FirstOrDefaultAsync(m => m.Id_NhaCungCap == id);
-            
+
             if (nhaCungCapModel == null)
             {
                 return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
