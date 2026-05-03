@@ -218,8 +218,8 @@ namespace WebDungCuLamBanh.APIControllers
             }
 
             var result = await _cartService.ProcessCODPaymentAsync(
-                uid, request.Ten, request.SoDienThoai, request.Email,
-                request.DiaChi, request.PhiVanChuyen, request.DiemThuong);
+                uid, request.Ten.Trim(), request.SoDienThoai.Trim(), request.Email.Trim(),
+                request.DiaChi.Trim(), request.PhiVanChuyen, request.DiemThuong);
 
             if (result == null)
                 return BadRequest(new { success = false, message = "Đã xảy ra sự cố ngoài ý muốn." });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
 import { cartApi } from "@/lib/api";
 import { formatCurrency, getImageUrl } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -124,9 +125,12 @@ export default function CheckoutPage() {
             <h2 className="font-bold mb-3">Sản phẩm</h2>
             {checkout.items.map((item) => (
               <div key={item.id_ChiTietDonHang} className="bg-white rounded-[20px] p-3 flex gap-3">
-                <img
+                <Image
                   src={getImageUrl(item.dungCu?.hinhAnh)}
                   alt={item.dungCu?.tenDungCu || ""}
+                  width={64}
+                  height={64}
+                  quality={15}
                   className="w-16 h-16 object-cover rounded-[20px] flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">

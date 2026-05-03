@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
 import { cartApi } from "@/lib/api";
 import { formatCurrency, getImageUrl } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -89,9 +90,12 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {cart!.items.map((item) => (
               <div key={item.id_ChiTietDonHang} className="bg-white rounded-[20px] p-4 flex gap-4">
-                <img
+                <Image
                   src={getImageUrl(item.dungCu?.hinhAnh)}
                   alt={item.dungCu?.tenDungCu || ""}
+                  width={96}
+                  height={96}
+                  quality={15}
                   className="w-24 h-24 object-cover rounded-[20px] flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
 import { favoriteApi } from "@/lib/api";
 import type { YeuThichModel } from "@/lib/types";
@@ -83,11 +84,16 @@ export default function FavoritesPage() {
                     href={`/products/${product.id_DungCu}`}
                     className="no-underline text-inherit w-[110px] md:w-[220px] bg-[#fbf1f1] rounded-[20px] hover:shadow-lg transition-shadow"
                   >
-                    <img
-                      src={product.hinhAnh || ""}
-                      alt={product.tenDungCu}
-                      className="w-full rounded-[20px] aspect-square object-cover"
-                    />
+                    <div className="relative w-full aspect-square">
+                      <Image
+                        src={product.hinhAnh || ""}
+                        alt={product.tenDungCu}
+                        fill
+                        sizes="(max-width: 768px) 110px, 220px"
+                        quality={15}
+                        className="rounded-[20px] object-cover"
+                      />
+                    </div>
                     <div className="p-2">
                       <p className="text-xs md:text-base font-bold line-clamp-2">
                         {product.tenDungCu}

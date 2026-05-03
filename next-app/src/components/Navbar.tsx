@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useCart } from "@/lib/cart-context";
@@ -78,7 +79,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 ml-6 md:ml-0">
-            <img src="/logo.svg" alt="Whisk & Flourish" className="h-14" />
+            <Image src="/logo.svg" alt="Whisk & Flourish" width={56} height={56} quality={15} className="h-14 w-auto" />
           </Link>
 
           {/* Desktop Menu */}
@@ -181,9 +182,12 @@ export default function Navbar() {
                         {cartItems.map((item) => (
                           <div key={item.id_ChiTietDonHang} className="flex gap-3 p-3 hover:bg-gray-50/50 transition-colors">
                             {item.dungCu?.hinhAnh && (
-                              <img
+                              <Image
                                 src={item.dungCu.hinhAnh}
                                 alt={item.dungCu?.tenDungCu || ""}
+                                width={56}
+                                height={56}
+                                quality={15}
                                 className="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-gray-100"
                               />
                             )}

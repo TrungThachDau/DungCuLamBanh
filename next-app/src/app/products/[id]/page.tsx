@@ -1,4 +1,5 @@
 import { productApi } from "@/lib/api";
+import Image from "next/image";
 import { formatCurrency, getImageUrl, calcDiscountPercent } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import AddToCartSection from "./AddToCartSection";
@@ -41,10 +42,14 @@ export default async function ProductDetailPage({ params }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image */}
           <div className="mb-4 md:mb-0">
-            <img
+            <Image
               src={getImageUrl(product.hinhAnh)}
               alt={product.tenDungCu}
+              width={500}
+              height={500}
+              quality={15}
               className="rounded-[20px] w-full max-w-[500px]"
+              priority
             />
           </div>
 

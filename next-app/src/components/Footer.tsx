@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -29,8 +30,8 @@ export default function Footer() {
             <p className="hover:underline"><a href="https://maps.app.goo.gl/GugywubpmNcgGxvb6" target="_blank" rel="noopener noreferrer" className="text-black no-underline">82 Đ. Chợ Lớn, Bình Phú, Quận 6</a></p>
           </div>
           <div className="md:col-span-2">
-            <img src="/bo-cong-thuong.png" alt="Bộ Công Thương" className="rounded w-[200px] mb-2" />
-            <img src="/logodai.png" alt="Whisk & Flourish" className="h-10" />
+            <Image src="/bo-cong-thuong.png" alt="Bộ Công Thương" width={200} height={76} quality={15} className="rounded w-[200px] mb-2" />
+            <Image src="/logodai.png" alt="Whisk & Flourish" width={280} height={40} quality={15} className="h-10 w-auto" />
           </div>
         </div>
       </div>

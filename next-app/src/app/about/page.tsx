@@ -13,6 +13,7 @@ export default function AboutPage() {
           alt="Whisk & Flourish"
           width={200}
           height={60}
+          quality={15}
           className="mb-4"
         />
         <header>

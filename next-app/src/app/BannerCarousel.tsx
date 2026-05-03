@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { BannerModel } from "@/lib/types";
 import { getImageUrl } from "@/lib/utils";
 
@@ -26,10 +27,10 @@ export default function BannerCarousel({ banners }: { banners: BannerModel[] }) 
         >
           {banner.lienKet ? (
             <a href={banner.lienKet}>
-              <img src={getImageUrl(banner.duongDan)} alt={banner.tenBanner || ""} className="w-full block" />
+              <Image src={getImageUrl(banner.duongDan)} alt={banner.tenBanner || ""} width={1400} height={500} quality={15} className="w-full block" priority={i === 0} />
             </a>
           ) : (
-            <img src={getImageUrl(banner.duongDan)} alt={banner.tenBanner || ""} className="w-full block" />
+            <Image src={getImageUrl(banner.duongDan)} alt={banner.tenBanner || ""} width={1400} height={500} quality={15} className="w-full block" priority={i === 0} />
           )}
         </div>
       ))}

@@ -89,6 +89,7 @@ export default function SignInPage() {
             alt="Logo"
             width={280}
             height={70}
+            quality={15}
             className="rounded my-2"
           />
           <h6 className="text-sm text-gray-700">

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function ServiceCards() {
   const services = [
     { img: "/customer-service.png", title: "Liên hệ với chúng tôi", desc: "+84 369 132 321" },
@@ -14,7 +16,7 @@ export default function ServiceCards() {
             <div className="p-4">
               <div className="flex items-center gap-0">
                 <div className="w-1/3 flex-shrink-0">
-                  <img src={item.img} alt="" className="rounded w-[70px]" />
+                  <Image src={item.img} alt="" width={70} height={70} quality={15} className="rounded w-[70px]" />
                 </div>
                 <div className="w-2/3">
                   <span className="text-xs">{item.title}</span><br />
