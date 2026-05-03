@@ -1,8 +1,8 @@
-import { productApi } from "@/lib/api";
+import { productApi } from "@/infrastructure/api";
 import Image from "next/image";
-import { formatCurrency, getImageUrl, calcDiscountPercent } from "@/lib/utils";
+import { formatCurrency, getImageUrl, calcDiscountPercent } from "@/presentation/utils";
 import { notFound } from "next/navigation";
-import AddToCartSection from "./AddToCartSection";
+import AddToCartSection from "@/presentation/components/AddToCartSection";
 import Link from "next/link";
 
 interface Props {

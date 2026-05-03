@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
-import { orderApi } from "@/lib/api";
-import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { orderApi } from "@/infrastructure/api";
+import { formatCurrency } from "@/presentation/utils";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { OrderHistoryResponse, DonHangModel, DonHangVanChuyenModel } from "@/lib/types";
+import { OrderHistoryResponse, DonHangModel, DonHangVanChuyenModel } from "@/domain/entities";
 import Link from "next/link";
 
 export default function OrderHistoryPage() {

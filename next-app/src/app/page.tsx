@@ -1,7 +1,7 @@
-import { homeApi } from "@/lib/api";
-import ProductCard from "@/components/ProductCard";
+import { homeApi } from "@/infrastructure/api";
+import ProductCard from "@/presentation/components/ProductCard";
 import Link from "next/link";
-import BannerCarousel from "./BannerCarousel";
+import BannerCarousel from "@/presentation/components/BannerCarousel";
 
 export default async function HomePage() {
   const data = await homeApi.getData();

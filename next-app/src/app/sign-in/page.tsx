@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { authApi } from "@/lib/api";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { authApi } from "@/infrastructure/api";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";

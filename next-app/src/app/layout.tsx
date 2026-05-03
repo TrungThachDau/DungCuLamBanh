@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { League_Spartan } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ServiceCards from "@/components/ServiceCards";
-import { AuthProvider } from "@/lib/auth-context";
-import { CartProvider } from "@/lib/cart-context";
+import Navbar from "@/presentation/components/Navbar";
+import Footer from "@/presentation/components/Footer";
+import ServiceCards from "@/presentation/components/ServiceCards";
+import { AuthProvider } from "@/presentation/contexts/auth-context";
+import { CartProvider } from "@/presentation/contexts/cart-context";
 
 const leagueSpartan = League_Spartan({
   variable: "--font-league-spartan",

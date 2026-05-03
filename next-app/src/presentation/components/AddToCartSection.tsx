@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useCart } from "@/lib/cart-context";
-import { favoriteApi } from "@/lib/api";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { useCart } from "@/presentation/contexts/cart-context";
+import { favoriteApi } from "@/infrastructure/api";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -78,8 +78,8 @@ export default function AddToCartSection({ productId, inStock }: Props) {
           onClick={handleAddToCart}
           disabled={!inStock || loading}
           className={`flex-1 rounded-[20px] font-bold text-sm transition-colors ${inStock
-              ? "bg-[#212631] text-white hover:bg-[#343a46]"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            ? "bg-[#212631] text-white hover:bg-[#343a46]"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
         >
           {loading ? "Đang thêm..." : inStock ? "Thêm vào giỏ" : "Đã bán hết"}

@@ -1,4 +1,4 @@
-// API Types matching the .NET backend models
+// Domain entities - Core business models
 
 export interface DungCuModel {
   id_DungCu: number;
@@ -121,7 +121,6 @@ export interface SelectOption {
   text: string;
 }
 
-// API Response types
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message?: string;

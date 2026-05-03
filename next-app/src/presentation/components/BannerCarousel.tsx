@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { BannerModel } from "@/lib/types";
-import { getImageUrl } from "@/lib/utils";
+import { BannerModel } from "@/domain/entities";
+import { getImageUrl } from "@/presentation/utils";
 
 export default function BannerCarousel({ banners }: { banners: BannerModel[] }) {
   const [current, setCurrent] = useState(0);

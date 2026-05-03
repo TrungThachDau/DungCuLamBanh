@@ -1,5 +1,5 @@
-import { orderApi } from "@/lib/api";
-import { formatCurrency } from "@/lib/utils";
+import { orderApi } from "@/infrastructure/api";
+import { formatCurrency } from "@/presentation/utils";
 import Link from "next/link";
 
 export const metadata = {

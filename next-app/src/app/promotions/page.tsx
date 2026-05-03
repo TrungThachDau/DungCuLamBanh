@@ -1,5 +1,5 @@
-import { homeApi } from "@/lib/api";
-import ProductCard from "@/components/ProductCard";
+import { homeApi } from "@/infrastructure/api";
+import ProductCard from "@/presentation/components/ProductCard";
 
 export default async function SaleOffPage() {
   const data = await homeApi.getData();

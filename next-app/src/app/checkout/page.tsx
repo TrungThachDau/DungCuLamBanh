@@ -1,12 +1,12 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/presentation/contexts/auth-context";
 import Image from "next/image";
-import { cartApi } from "@/lib/api";
-import { formatCurrency, getImageUrl } from "@/lib/utils";
+import { cartApi } from "@/infrastructure/api";
+import { formatCurrency, getImageUrl } from "@/presentation/utils";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckoutResponse } from "@/lib/types";
+import { CheckoutResponse } from "@/domain/entities";
 
 export default function CheckoutPage() {
   const { token, isLoading: authLoading } = useAuth();

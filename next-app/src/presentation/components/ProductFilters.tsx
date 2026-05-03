@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SelectOption } from "@/lib/types";
+import { SelectOption } from "@/domain/entities";
 
 interface Props {
   categories: SelectOption[];

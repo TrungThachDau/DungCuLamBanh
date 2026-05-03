@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/presentation/contexts/auth-context";
 import Image from "next/image";
-import { cartApi } from "@/lib/api";
-import { formatCurrency, getImageUrl } from "@/lib/utils";
+import { cartApi } from "@/infrastructure/api";
+import { formatCurrency, getImageUrl } from "@/presentation/utils";
 import { useEffect, useState } from "react";
-import { CartResponse } from "@/lib/types";
+import { CartResponse } from "@/domain/entities";
 import Link from "next/link";
 
 export default function CartPage() {

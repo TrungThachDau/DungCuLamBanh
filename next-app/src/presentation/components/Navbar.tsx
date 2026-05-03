@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/presentation/contexts/auth-context";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useCart } from "@/lib/cart-context";
-import { cartApi } from "@/lib/api";
-import type { ChiTietDonHangModel } from "@/lib/types";
+import { useCart } from "@/presentation/contexts/cart-context";
+import { cartApi } from "@/infrastructure/api";
+import type { ChiTietDonHangModel } from "@/domain/entities";
 
 function formatCurrency(value: number) {
   return value.toLocaleString("vi-VN") + " ₫";
@@ -22,7 +22,6 @@ export default function Navbar() {
   const [cartLoading, setCartLoading] = useState(false);
   const cartRef = useRef<HTMLDivElement>(null);
 
-  // Close cart popup when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
@@ -48,7 +47,6 @@ export default function Navbar() {
       .finally(() => setCartLoading(false));
   }, [token]);
 
-  // Reload mini cart when cart-updated event fires
   useEffect(() => {
     loadMiniCart();
     const onCartUpdate = () => {

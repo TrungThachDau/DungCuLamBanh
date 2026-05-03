@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { authApi } from "@/lib/api";
+import { authApi } from "@/infrastructure/api";
 import Link from "next/link";
 
 export default function ResetPasswordPage() {

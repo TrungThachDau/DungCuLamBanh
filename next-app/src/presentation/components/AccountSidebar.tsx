@@ -23,8 +23,8 @@ export default function AccountSidebar() {
             <Link
               href={item.href}
               className={`block px-4 py-3 rounded-[20px] no-underline transition-colors ${isActive
-                  ? "bg-[#f8d9d6] font-bold text-[#49130e]"
-                  : "bg-[#fbf1f1] text-[#49130e] hover:bg-[#f8d9d6]"
+                ? "bg-[#f8d9d6] font-bold text-[#49130e]"
+                : "bg-[#fbf1f1] text-[#49130e] hover:bg-[#f8d9d6]"
                 }`}
             >
               {item.label}

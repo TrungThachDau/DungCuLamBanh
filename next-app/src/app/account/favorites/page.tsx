@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useAuth } from "@/lib/auth-context";
-import { favoriteApi } from "@/lib/api";
-import type { YeuThichModel } from "@/lib/types";
-import { formatCurrency } from "@/lib/utils";
-import AccountSidebar from "@/components/AccountSidebar";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { favoriteApi } from "@/infrastructure/api";
+import type { YeuThichModel } from "@/domain/entities";
+import { formatCurrency } from "@/presentation/utils";
+import AccountSidebar from "@/presentation/components/AccountSidebar";
 
 export default function FavoritesPage() {
   const { user, token, isLoading } = useAuth();

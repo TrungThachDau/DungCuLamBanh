@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useAuth } from "./auth-context";
-import { cartApi } from "./api";
+import { cartApi } from "@/infrastructure/api";
 
 interface CartContextType {
   itemCount: number;
@@ -12,8 +12,8 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType>({
   itemCount: 0,
-  addItem: async () => {},
-  refreshCount: () => {},
+  addItem: async () => { },
+  refreshCount: () => { },
 });
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -22,21 +22,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const refreshCount = useCallback(() => {
     if (token) {
-      cartApi.getItemCount(token).then((r) => setItemCount(r.count)).catch(() => {});
+      cartApi.getItemCount(token).then((r) => setItemCount(r.count)).catch(() => { });
     } else {
       setItemCount(0);
     }
   }, [token]);
 
-  // Refresh count when token changes or cart-updated event fires
   useEffect(() => {
     refreshCount();
 
     const onCartUpdate = () => {
-      // Re-read token from localStorage since state may not be updated yet
       const currentToken = localStorage.getItem("token");
       if (currentToken) {
-        cartApi.getItemCount(currentToken).then((r) => setItemCount(r.count)).catch(() => {});
+        cartApi.getItemCount(currentToken).then((r) => setItemCount(r.count)).catch(() => { });
       }
     };
     window.addEventListener("cart-updated", onCartUpdate);
@@ -44,7 +42,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [refreshCount]);
 
   const addItem = useCallback(async (productId: number, quantity: number) => {
-    // Auto sign in anonymously if not logged in
     const authToken = await ensureAuth();
     await cartApi.addItem(authToken, productId, quantity);
     window.dispatchEvent(new Event("cart-updated"));

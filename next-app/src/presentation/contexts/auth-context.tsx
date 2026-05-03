@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { authApi } from "./api";
+import { authApi } from "@/infrastructure/api";
 
 interface User {
   uid: string;
@@ -59,19 +59,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("user");
   }, []);
 
-  // Ensure we have auth - if not logged in, auto sign in anonymously
   const ensureAuth = useCallback(async (): Promise<string> => {
     if (token) {
-      // Check if token is expired by decoding JWT payload
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.exp && payload.exp * 1000 > Date.now()) {
-          return token; // Still valid
+          return token;
         }
       } catch {
         // Can't parse → treat as expired
       }
-      // Token expired — clear it so we get a fresh one below
       signOut();
     }
 

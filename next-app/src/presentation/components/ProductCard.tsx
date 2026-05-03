@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { DungCuModel } from "@/lib/types";
-import { formatCurrency, getImageUrl, calcDiscountPercent } from "@/lib/utils";
+import { DungCuModel } from "@/domain/entities";
+import { formatCurrency, calcDiscountPercent } from "@/presentation/utils";
+import { getImageUrl } from "@/presentation/utils";
 
 interface ProductCardProps {
   product: DungCuModel;

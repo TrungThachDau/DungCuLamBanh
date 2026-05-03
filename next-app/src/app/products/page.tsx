@@ -1,6 +1,6 @@
-import { productApi } from "@/lib/api";
-import ProductCard from "@/components/ProductCard";
-import ProductFilters from "./ProductFilters";
+import { productApi } from "@/infrastructure/api";
+import ProductCard from "@/presentation/components/ProductCard";
+import ProductFilters from "@/presentation/components/ProductFilters";
 import Link from "next/link";
 
 interface Props {
@@ -137,8 +137,8 @@ function PaginationLink({
     <a
       href={href}
       className={`px-3 py-1.5 rounded-[20px] text-sm border transition-colors ${active
-          ? "bg-blue-600 text-white border-blue-600"
-          : "text-black border-gray-200 hover:bg-gray-100"
+        ? "bg-blue-600 text-white border-blue-600"
+        : "text-black border-gray-200 hover:bg-gray-100"
         }`}
     >
       {children}

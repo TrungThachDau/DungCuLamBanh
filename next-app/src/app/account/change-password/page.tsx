@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import { authApi } from "@/lib/api";
-import AccountSidebar from "@/components/AccountSidebar";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { authApi } from "@/infrastructure/api";
+import AccountSidebar from "@/presentation/components/AccountSidebar";
 
 export default function ChangePasswordPage() {
   const { user, token, signOut, isLoading } = useAuth();

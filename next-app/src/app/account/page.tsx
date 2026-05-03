@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import { authApi } from "@/lib/api";
-import type { KhachHangModel } from "@/lib/types";
-import AccountSidebar from "@/components/AccountSidebar";
+import { useAuth } from "@/presentation/contexts/auth-context";
+import { authApi } from "@/infrastructure/api";
+import type { KhachHangModel } from "@/domain/entities";
+import AccountSidebar from "@/presentation/components/AccountSidebar";
 
 export default function AccountPage() {
   const { user, token, isLoading } = useAuth();
