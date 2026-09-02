@@ -6,16 +6,10 @@ using WebDungCuLamBanh.Models;
 using WebDungCuLamBanh.Models.admin;
 using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminControllers
-{
-    public class AdministratorController : Controller
-    {
-        private readonly IAdministratorService _administratorService;
+namespace WebDungCuLamBanh.AdminControllers;
 
-        public AdministratorController(IAdministratorService administratorService)
-        {
-            _administratorService = administratorService;
-        }
+public class AdministratorController(IAdministratorService administratorService) : Controller
+{
 
         public IActionResult Index()
         {
@@ -27,7 +21,7 @@ namespace WebDungCuLamBanh.AdminControllers
         {
             try
             {
-                var admin = await _administratorService.AuthenticateAsync(adminModel);
+                var admin = await administratorService.AuthenticateAsync(adminModel);
                 if (admin != null && admin.Quyen == 1)
                 {
                     HttpContext.Session.Set("admin", System.Text.Encoding.UTF8.GetBytes(admin.TenNguoiDung.ToString()));
@@ -59,7 +53,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var data = await _administratorService.GetDashboardAsync(fromDate, toDate);
+            var data = await administratorService.GetDashboardAsync(fromDate, toDate);
             ViewBag.tienVatThangNay = HtmlHelpers.FormatCurrency((decimal)data.TienVatThangNay);
             ViewBag.tienShipThangNay = HtmlHelpers.FormatCurrency((decimal)data.TienShipThangNay);
             ViewBag.doanhThuSauThuevaChiPhiThangNay = HtmlHelpers.FormatCurrency((decimal)data.DoanhThuSauThuevaChiPhiThangNay);
@@ -97,7 +91,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var products = await _administratorService.GetProductsAsync(search);
+            var products = await administratorService.GetProductsAsync(search);
             return View(products);
         }
 
@@ -120,7 +114,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _administratorService.CreateProductAsync(dungCuModel, imageInput);
+                    var result = await administratorService.CreateProductAsync(dungCuModel, imageInput);
                     if (!result.Success)
                     {
                         ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
@@ -151,7 +145,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return NotFound();
             }
 
-            var dungCuModel = await _administratorService.GetProductForEditAsync(id);
+            var dungCuModel = await administratorService.GetProductForEditAsync(id);
             if (dungCuModel == null)
             {
                 return NotFound();
@@ -174,7 +168,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 try
                 {
-                    var result = await _administratorService.UpdateProductAsync(dungCuModel, imageInput);
+                    var result = await administratorService.UpdateProductAsync(dungCuModel, imageInput);
                     if (!result.Success)
                     {
                         ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
@@ -200,7 +194,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return NotFound();
             }
 
-            var dungCuModel = await _administratorService.GetProductForEditAsync(id);
+            var dungCuModel = await administratorService.GetProductForEditAsync(id);
             if (dungCuModel == null)
             {
                 return NotFound();
@@ -219,7 +213,7 @@ namespace WebDungCuLamBanh.AdminControllers
             }
             try
             {
-                var result = await _administratorService.SoftDeleteProductAsync(id);
+                var result = await administratorService.SoftDeleteProductAsync(id);
                 if (!result.Success)
                 {
                     return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Message = result.ErrorMessage });
@@ -240,7 +234,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var viewModel = await _administratorService.GetCategoriesAsync();
+            var viewModel = await administratorService.GetCategoriesAsync();
             return View(viewModel);
         }
 
@@ -255,11 +249,11 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _administratorService.CreateCategoryAsync(TenLoaiDungCu);
+                    var result = await administratorService.CreateCategoryAsync(TenLoaiDungCu);
                     if (!result.Success)
                     {
                         ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
-                        var viewModel = await _administratorService.GetCategoriesAsync();
+                        var viewModel = await administratorService.GetCategoriesAsync();
                         return View("Category", viewModel);
                     }
 
@@ -271,7 +265,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Message = ex.Message });
             }
 
-            var fallbackViewModel = await _administratorService.GetCategoriesAsync();
+            var fallbackViewModel = await administratorService.GetCategoriesAsync();
             return View("Category", fallbackViewModel);
         }
 
@@ -281,9 +275,9 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            await _administratorService.ApplySaleOffAsync();
-            var appDbContext = await _administratorService.GetSaleOffsAsync();
-            return View(appDbContext);
+            await administratorService.ApplySaleOffAsync();
+            var saleOffs = await administratorService.GetSaleOffsAsync();
+            return View(saleOffs);
         }
 
         public async Task<IActionResult> CreateSaleOff()
@@ -292,7 +286,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var products = await _administratorService.GetProductsAsync(string.Empty);
+            var products = await administratorService.GetProductsAsync(string.Empty);
             ViewData["Id_SanPham"] = new SelectList(products, "Id_DungCu", "TenDungCu");
             return View();
         }
@@ -306,11 +300,11 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _administratorService.CreateSaleOffAsync(khuyenMai2);
+            var result = await administratorService.CreateSaleOffAsync(khuyenMai2);
             if (!result.Success)
             {
                 ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
-                var products = await _administratorService.GetProductsAsync(string.Empty);
+                var products = await administratorService.GetProductsAsync(string.Empty);
                 ViewData["Id_SanPham"] = new SelectList(products, "Id_DungCu", "TenDungCu");
                 return View(khuyenMai2);
             }
@@ -325,7 +319,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            await _administratorService.DeleteSaleOffAsync(id);
+            await administratorService.DeleteSaleOffAsync(id);
             return RedirectToAction(nameof(SaleOff));
         }
 
@@ -335,7 +329,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var data = await _administratorService.GetSaleOffDetailAsync(id);
+            var data = await administratorService.GetSaleOffDetailAsync(id);
             ViewData["Id_KhuyenMai"] = id;
             ViewData["KhuyenMai"] = data.KhuyenMai;
             ViewData["SanPham"] = new SelectList(data.Products, "Id_DungCu", "TenDungCu");
@@ -352,7 +346,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _administratorService.AddProductToSaleOffAsync(chiTietKhuyenMai);
+            var result = await administratorService.AddProductToSaleOffAsync(chiTietKhuyenMai);
             if (!result.Success)
             {
                 return Json(new { success = false, message = result.ErrorMessage });
@@ -363,7 +357,7 @@ namespace WebDungCuLamBanh.AdminControllers
         [HttpPost]
         public async Task<IActionResult> DeleteProductSaleOff(int Id_KhuyenMai, int Id_CTKM)
         {
-            await _administratorService.DeleteProductSaleOffAsync(Id_KhuyenMai, Id_CTKM);
+            await administratorService.DeleteProductSaleOffAsync(Id_KhuyenMai, Id_CTKM);
             return RedirectToAction("AddProductToSaleOff", "Administrator", new { id = Id_KhuyenMai });
         }
 
@@ -375,7 +369,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _administratorService.ApplySaleOffAsync();
+            var result = await administratorService.ApplySaleOffAsync();
             if (!result.Success)
             {
                 return Json(new { success = false, message = result.ErrorMessage });
@@ -390,8 +384,8 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var appDbContext = await _administratorService.GetVouchersAsync();
-            return View(appDbContext);
+            var vouchers = await administratorService.GetVouchersAsync();
+            return View(vouchers);
         }
 
         public IActionResult CreateVoucher()
@@ -412,7 +406,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _administratorService.CreateVoucherAsync(maGiamGia);
+            var result = await administratorService.CreateVoucherAsync(maGiamGia);
             if (!result.Success)
             {
                 ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
@@ -424,7 +418,7 @@ namespace WebDungCuLamBanh.AdminControllers
 
         public async Task<IActionResult> DeleteVoucher(string? id)
         {
-            await _administratorService.DeleteVoucherAsync(id);
+            await administratorService.DeleteVoucherAsync(id);
             return RedirectToAction(nameof(Voucher));
         }
 
@@ -435,7 +429,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _administratorService.DeleteCategoryAsync(id);
+            var result = await administratorService.DeleteCategoryAsync(id);
             if (!result.Success)
             {
                 return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Message = result.ErrorMessage ?? "Da c� l?i x?y ra." });
@@ -451,7 +445,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return RedirectToAction("Index");
             }
 
-            var data = await _administratorService.GetAllOrdersAsync();
+            var data = await administratorService.GetAllOrdersAsync();
             ViewBag.donHangChuaGiao = data.DonHangChuaGiao;
             ViewBag.donHangDaGiao = data.DonHangDaGiao;
             ViewBag.donHangDangGiao = data.DonHangDangGiao;
@@ -466,7 +460,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var data = await _administratorService.GetOrdersNotDeliveredAsync();
+            var data = await administratorService.GetOrdersNotDeliveredAsync();
             ViewData["TrangThaiVanChuyen"] = data.ShippingStatusOptions;
             return View(data.Orders);
         }
@@ -477,7 +471,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var data = await _administratorService.GetOrdersDeliveredAsync();
+            var data = await administratorService.GetOrdersDeliveredAsync();
             ViewData["TrangThaiVanChuyen"] = data.ShippingStatusOptions;
             return View(data.Orders);
         }
@@ -491,7 +485,7 @@ namespace WebDungCuLamBanh.AdminControllers
             var session = HttpContext.Session.GetString("admin");
             ViewBag.email = session;
 
-            var result = await _administratorService.GetOrderDetailAsync(id);
+            var result = await administratorService.GetOrderDetailAsync(id);
             if (!result.Success || result.Data?.ViewModel == null)
             {
                 return NotFound(result.ErrorMessage ?? "Kh�ng t�m th?y h�a don.");
@@ -512,8 +506,8 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            var appDbContext = await _administratorService.GetBannersAsync();
-            return View(appDbContext);
+            var banners = await administratorService.GetBannersAsync();
+            return View(banners);
         }
 
         public IActionResult CreateBanner()
@@ -533,7 +527,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _administratorService.CreateBannerAsync(bannerModel, imageInput);
+                    var result = await administratorService.CreateBannerAsync(bannerModel, imageInput);
                     if (!result.Success)
                     {
                         ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
@@ -560,7 +554,7 @@ namespace WebDungCuLamBanh.AdminControllers
                 return NotFound();
             }
 
-            var bannerModel = await _administratorService.GetBannerAsync(id);
+            var bannerModel = await administratorService.GetBannerAsync(id);
             if (!bannerModel.Success || bannerModel.Data == null)
             {
                 return NotFound();
@@ -581,7 +575,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 try
                 {
-                    var result = await _administratorService.UpdateBannerAsync(bannerModel, imageInput);
+                    var result = await administratorService.UpdateBannerAsync(bannerModel, imageInput);
                     if (!result.Success)
                     {
                         ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Da c� l?i x?y ra.");
@@ -603,7 +597,7 @@ namespace WebDungCuLamBanh.AdminControllers
             {
                 return RedirectToAction("Index");
             }
-            await _administratorService.DeleteBannerAsync(id);
+            await administratorService.DeleteBannerAsync(id);
             return RedirectToAction(nameof(Banner));
         }
 
@@ -611,7 +605,7 @@ namespace WebDungCuLamBanh.AdminControllers
         [Route("/Administrator/ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(int dhvc, int value)
         {
-            var result = await _administratorService.ChangeStatusAsync(dhvc, value);
+            var result = await administratorService.ChangeStatusAsync(dhvc, value);
             if (!result.Success)
             {
                 return Json(new { success = false, error = result.ErrorMessage });
@@ -624,13 +618,13 @@ namespace WebDungCuLamBanh.AdminControllers
         [Route("/Administrator/GetEarningThisMonth")]
         public async Task<IActionResult> GetEarningThisMonth()
         {
-            var earnings = await _administratorService.GetEarningThisMonthAsync();
+            var earnings = await administratorService.GetEarningThisMonthAsync();
             return Json(earnings);
         }
 
         private async Task SetProductFormOptionsAsync(DungCuModel? dungCuModel = null)
         {
-            var options = await _administratorService.GetProductFormOptionsAsync();
+            var options = await administratorService.GetProductFormOptionsAsync();
             ViewData["LoaiDungCu"] = new SelectList(options.Categories, "Id_LoaiDungCu", "TenLoaiDungCu", dungCuModel?.Id_LoaiDungCu);
             ViewData["Id_LoaiDungCu"] = new SelectList(options.Categories, "Id_LoaiDungCu", "TenLoaiDungCu", dungCuModel?.Id_LoaiDungCu);
             ViewData["NhaCungCap"] = options.Suppliers
@@ -651,4 +645,3 @@ namespace WebDungCuLamBanh.AdminControllers
             ViewData["Id_NhaSanXuat"] = ViewData["NhaSanXuat"];
         }
     }
-}

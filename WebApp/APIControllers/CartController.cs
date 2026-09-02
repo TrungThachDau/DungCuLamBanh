@@ -1,150 +1,94 @@
-﻿using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MimeKit;
-using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.API
+namespace WebDungCuLamBanh.API;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CartController(ICartService cartService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CartController : ControllerBase
+    // GET: api/Cart
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<DonHangModel>>> GetChiTietDonHangs()
     {
-        private readonly AppDbContext _context;
+        var orders = await cartService.GetAllOrdersAsync();
+        return Ok(orders);
+    }
 
-        public CartController(AppDbContext context)
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetChiTietDonHangModel(string id)
+    {
+        var ctdh = await cartService.GetUnpaidOrderDetailsByCustomerIdAsync(id);
+
+        if (ctdh == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // GET: api/Cart
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DonHangModel>>> GetChiTietDonHangs()
+        return Ok(ctdh);
+    }
+
+    [HttpGet("total/{id}")]
+    public async Task<ActionResult> ToTal(string id)
+    {
+        var total = await cartService.GetUnpaidOrderTotalAsync(id);
+        if (total == null)
         {
-            return await _context.DonHangs.ToListAsync();
+            return NotFound();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetChiTietDonHangModel(string id)
+        return Ok(total);
+    }
+
+    // PUT: api/Cart/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutChiTietDonHangModel(int id, ChiTietDonHangModel chiTietDonHangModel)
+    {
+        if (id != chiTietDonHangModel.Id_ChiTietDonHang)
         {
-
-            var hoaDon = await _context.DonHangs
-                .FirstOrDefaultAsync(hd => hd.Id_KhachHang == id && hd.TrangThai == "Chưa thanh toán");
-
-
-            if (hoaDon == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                string? maHD = hoaDon.Id_DonHang;
-                if (_context.ChiTietDonHangs != null)
-                {
-                    var ctdh = await _context.ChiTietDonHangs
-                        .Include(p => p.DungCu)
-                        .Where(string.IsNullOrEmpty(maHD) ? p => p.Id_DonHang == maHD : p => p.Id_DonHang == maHD)
-                        .ToListAsync();
-                    return Ok(ctdh);
-                }
-            }
-            return Ok(new { haha = "eror" });
-        }
-        [HttpGet("total/{id}")]
-        public async Task<ActionResult> ToTal(string id)
-        {
-            var hoaDon = await _context.DonHangs
-                .FirstOrDefaultAsync(hd => hd.Id_KhachHang == id && hd.TrangThai == "Chưa thanh toán");
-            if (hoaDon == null)
-            {
-                return NotFound();
-            }
-            else if (hoaDon != null)
-            {
-                return Ok(hoaDon.TongTien);
-            }
-            return Ok(new { haha = "eror" });
-        }
-        // PUT: api/Cart/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutChiTietDonHangModel(int id, ChiTietDonHangModel chiTietDonHangModel)
-        {
-            if (id != chiTietDonHangModel.Id_ChiTietDonHang)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(chiTietDonHangModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChiTietDonHangModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest();
         }
 
-        // POST: api/Cart
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ChiTietDonHangModel>> PostChiTietDonHangModel(ChiTietDonHangModel chiTietDonHangModel)
+        var result = await cartService.UpdateOrderDetailAsync(chiTietDonHangModel);
+        if (!result.Success)
         {
-            _context.ChiTietDonHangs.Add(chiTietDonHangModel);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetChiTietDonHangModel", new { id = chiTietDonHangModel.Id_ChiTietDonHang }, chiTietDonHangModel);
+            return NotFound();
         }
 
-        // DELETE: api/Cart/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteChiTietDonHangModel(int id)
+        return NoContent();
+    }
+
+    // POST: api/Cart
+    [HttpPost]
+    public async Task<ActionResult<ChiTietDonHangModel>> PostChiTietDonHangModel(ChiTietDonHangModel chiTietDonHangModel)
+    {
+        var result = await cartService.CreateOrderDetailAsync(chiTietDonHangModel);
+        if (!result.Success)
         {
-            var chiTietDonHangModel = await _context.ChiTietDonHangs.FindAsync(id);
-            if (chiTietDonHangModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.ChiTietDonHangs.Remove(chiTietDonHangModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        private bool ChiTietDonHangModelExists(int id)
+        return CreatedAtAction("GetChiTietDonHangModel", new { id = chiTietDonHangModel.Id_ChiTietDonHang }, chiTietDonHangModel);
+    }
+
+    // DELETE: api/Cart/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteChiTietDonHangModel(int id)
+    {
+        var result = await cartService.DeleteOrderDetailAsync(id);
+        if (!result.Success)
         {
-            return _context.ChiTietDonHangs.Any(e => e.Id_ChiTietDonHang == id);
+            return NotFound();
         }
-        [HttpGet("calculate-ship")]
-        public async Task<ActionResult> CaculateShip(string zone)
-        {
-            var giaVanChuyen = await _context.CuocVanChuyens
-                .FirstOrDefaultAsync(p => p.KhuVuc == zone);
-            if (giaVanChuyen == null)
-            {
-                giaVanChuyen = await _context.CuocVanChuyens
-                    .FirstOrDefaultAsync(cvc => cvc.KhuVuc == "Khác");
-                return Ok(giaVanChuyen.CuocVanChuyen);
-            }
-            if (giaVanChuyen != null)
-            {
-                return Ok(giaVanChuyen.CuocVanChuyen);
-            }
-            return Ok(giaVanChuyen.CuocVanChuyen);
-        }
-        
+
+        return NoContent();
+    }
+
+    [HttpGet("calculate-ship")]
+    public async Task<ActionResult> CaculateShip(string zone)
+    {
+        var fee = await cartService.CalculateShippingForZoneAsync(zone);
+        return Ok(fee);
     }
 }

@@ -2,51 +2,50 @@ using Microsoft.EntityFrameworkCore;
 using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
 
-namespace WebDungCuLamBanh.Repositories
+namespace WebDungCuLamBanh.Repositories;
+
+public class AdministratorRepository(AppDbContext context) : Repository<AdminModel>(context), IAdministratorRepository
 {
-    public class AdministratorRepository(AppDbContext context) : IAdministratorRepository
+    public IQueryable<AdminModel> Admins => Context.Admins.AsQueryable();
+    public IQueryable<DungCuModel> Products => Context.DungCus.AsQueryable();
+    public IQueryable<LoaiDungCuModel> Categories => Context.LoaiDungCus.AsQueryable();
+    public IQueryable<KhuyenMaiModel> SaleOffs => Context.KhuyenMai2s.AsQueryable();
+    public IQueryable<ChiTietKhuyenMaiModel> SaleOffDetails => Context.ChiTietKhuyenMais.AsQueryable();
+    public IQueryable<MaGiamGiaModel> Vouchers => Context.MaGiamGias.AsQueryable();
+    public IQueryable<DonHangModel> Orders => Context.DonHangs.AsQueryable();
+    public IQueryable<DonHangVanChuyenModel> ShippingOrders => Context.DonHangVanChuyens.AsQueryable();
+    public IQueryable<TrangThaiVanChuyenModel> ShippingStatuses => Context.TrangThaiVanChuyens.AsQueryable();
+    public IQueryable<BannerModel> Banners => Context.Banners.AsQueryable();
+    public IQueryable<HoaDonNhapHangModel> ImportInvoices => Context.HoaDonNhapHangs.AsQueryable();
+    public IQueryable<ChiTietDonHangModel> OrderDetails => Context.ChiTietDonHangs.AsQueryable();
+    public IQueryable<NhaCungCapModel> Suppliers => Context.NhaCungCaps.AsQueryable();
+    public IQueryable<NhaSanXuatModel> Manufacturers => Context.NhaSanXuats.AsQueryable();
+
+    public async Task<T?> FindAsync<T>(params object[] keyValues) where T : class
     {
-        public IQueryable<AdminModel> Admins => context.Admins.AsQueryable();
-        public IQueryable<DungCuModel> Products => context.DungCus.AsQueryable();
-        public IQueryable<LoaiDungCuModel> Categories => context.LoaiDungCus.AsQueryable();
-        public IQueryable<KhuyenMaiModel> SaleOffs => context.KhuyenMai2s.AsQueryable();
-        public IQueryable<ChiTietKhuyenMaiModel> SaleOffDetails => context.ChiTietKhuyenMais.AsQueryable();
-        public IQueryable<MaGiamGiaModel> Vouchers => context.MaGiamGias.AsQueryable();
-        public IQueryable<DonHangModel> Orders => context.DonHangs.AsQueryable();
-        public IQueryable<DonHangVanChuyenModel> ShippingOrders => context.DonHangVanChuyens.AsQueryable();
-        public IQueryable<TrangThaiVanChuyenModel> ShippingStatuses => context.TrangThaiVanChuyens.AsQueryable();
-        public IQueryable<BannerModel> Banners => context.Banners.AsQueryable();
-        public IQueryable<HoaDonNhapHangModel> ImportInvoices => context.HoaDonNhapHangs.AsQueryable();
-        public IQueryable<ChiTietDonHangModel> OrderDetails => context.ChiTietDonHangs.AsQueryable();
-        public IQueryable<NhaCungCapModel> Suppliers => context.NhaCungCaps.AsQueryable();
-        public IQueryable<NhaSanXuatModel> Manufacturers => context.NhaSanXuats.AsQueryable();
+        return await Context.Set<T>().FindAsync(keyValues);
+    }
 
-        public async Task<T?> FindAsync<T>(params object[] keyValues) where T : class
-        {
-            return await context.Set<T>().FindAsync(keyValues);
-        }
+    public Task AddAsync<T>(T entity) where T : class
+    {
+        Context.Set<T>().Add(entity);
+        return Task.CompletedTask;
+    }
 
-        public Task AddAsync<T>(T entity) where T : class
-        {
-            context.Set<T>().Add(entity);
-            return Task.CompletedTask;
-        }
+    public Task UpdateAsync<T>(T entity) where T : class
+    {
+        Context.Set<T>().Update(entity);
+        return Task.CompletedTask;
+    }
 
-        public Task UpdateAsync<T>(T entity) where T : class
-        {
-            context.Set<T>().Update(entity);
-            return Task.CompletedTask;
-        }
+    public Task RemoveAsync<T>(T entity) where T : class
+    {
+        Context.Set<T>().Remove(entity);
+        return Task.CompletedTask;
+    }
 
-        public Task RemoveAsync<T>(T entity) where T : class
-        {
-            context.Set<T>().Remove(entity);
-            return Task.CompletedTask;
-        }
-
-        public Task SaveChangesAsync()
-        {
-            return context.SaveChangesAsync();
-        }
+    public new Task SaveChangesAsync()
+    {
+        return Context.SaveChangesAsync();
     }
 }

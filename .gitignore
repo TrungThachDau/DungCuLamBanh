@@ -1,3 +1,5 @@
 WebApp/.vs
 WebApp/bin
 WebApp/obj
+.env
+*.env

@@ -500,5 +500,116 @@ namespace WebDungCuLamBanh.Services
         {
             return await repository.Customers.FirstOrDefaultAsync(k => k.Id_KhachHang == customerId);
         }
+
+        // API & CRUD extensions
+        public async Task<IEnumerable<DonHangModel>> GetAllOrdersAsync()
+        {
+            return await repository.Orders.ToListAsync();
+        }
+
+        public async Task<List<ChiTietDonHangModel>?> GetUnpaidOrderDetailsByCustomerIdAsync(string customerId)
+        {
+            var hoaDon = await GetUnpaidOrderAsync(customerId);
+            if (hoaDon == null) return null;
+
+            return await repository.OrderDetails
+                .Include(p => p.DungCu)
+                .Where(p => p.Id_DonHang == hoaDon.Id_DonHang)
+                .ToListAsync();
+        }
+
+        public async Task<decimal?> GetUnpaidOrderTotalAsync(string customerId)
+        {
+            var hoaDon = await GetUnpaidOrderAsync(customerId);
+            return hoaDon?.TongTien;
+        }
+
+        public async Task<ChiTietDonHangModel?> GetOrderDetailByIdAsync(int id)
+        {
+            return await repository.FindAsync<ChiTietDonHangModel>(id);
+        }
+
+        public async Task<OperationResult<ChiTietDonHangModel>> CreateOrderDetailAsync(ChiTietDonHangModel model)
+        {
+            try
+            {
+                await repository.AddAsync(model);
+                await repository.SaveChangesAsync();
+                return OperationResult<ChiTietDonHangModel>.SuccessResult(model);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult<ChiTietDonHangModel>.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<OperationResult> UpdateOrderDetailAsync(ChiTietDonHangModel model)
+        {
+            try
+            {
+                if (!await OrderDetailExistsAsync(model.Id_ChiTietDonHang))
+                {
+                    return OperationResult.FailureResult("Không tìm thấy chi tiết đơn hàng.");
+                }
+
+                await repository.UpdateAsync(model);
+                await repository.SaveChangesAsync();
+                return OperationResult.SuccessResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await OrderDetailExistsAsync(model.Id_ChiTietDonHang))
+                {
+                    return OperationResult.FailureResult("Không tìm thấy chi tiết đơn hàng.");
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<OperationResult> DeleteOrderDetailAsync(int id)
+        {
+            try
+            {
+                var item = await repository.FindAsync<ChiTietDonHangModel>(id);
+                if (item == null)
+                {
+                    return OperationResult.FailureResult("Không tìm thấy chi tiết đơn hàng.");
+                }
+
+                await repository.RemoveAsync(item);
+                await repository.SaveChangesAsync();
+                return OperationResult.SuccessResult();
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<decimal> CalculateShippingForZoneAsync(string? zone)
+        {
+            var giaVanChuyen = await repository.ShippingRates
+                .FirstOrDefaultAsync(p => p.KhuVuc == zone);
+
+            if (giaVanChuyen != null)
+            {
+                return (decimal)giaVanChuyen.CuocVanChuyen;
+            }
+
+            var fallback = await repository.ShippingRates
+                .FirstOrDefaultAsync(cvc => cvc.KhuVuc == "Khác");
+
+            return fallback != null ? (decimal)fallback.CuocVanChuyen : 0m;
+        }
+
+        public async Task<bool> OrderDetailExistsAsync(int? id)
+        {
+            if (!id.HasValue) return false;
+            return await repository.OrderDetails.AnyAsync(e => e.Id_ChiTietDonHang == id.Value);
+        }
     }
 }

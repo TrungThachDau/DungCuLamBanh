@@ -1,108 +1,89 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminAPIControllers
+namespace WebDungCuLamBanh.AdminAPIControllers;
+
+[ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Route("api/[controller]")]
+public class SupplierController(ISupplierService supplierService) : ControllerBase
 {
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class SupplierController(AppDbContext context) : ControllerBase
+    // GET: api/Supplier
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<NhaCungCapModel>>> GetAll()
     {
-        // GET: api/Supplier
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<NhaCungCapModel>>> GetAll()
+        var items = await supplierService.GetAllAsync();
+        return Ok(items);
+    }
+
+    // GET: api/Supplier/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<NhaCungCapModel>> GetById(int id)
+    {
+        var nhaCungCapModel = await supplierService.GetByIdAsync(id);
+        
+        if (nhaCungCapModel == null)
         {
-            return await context.NhaCungCaps.ToListAsync();
+            return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
         }
 
-        // GET: api/Supplier/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NhaCungCapModel>> GetById(int id)
-        {
-            var nhaCungCapModel = await context.NhaCungCaps
-                .FirstOrDefaultAsync(m => m.Id_NhaCungCap == id);
-            
-            if (nhaCungCapModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
-            }
+        return Ok(nhaCungCapModel);
+    }
 
-            return nhaCungCapModel;
+    // POST: api/Supplier
+    [HttpPost]
+    public async Task<ActionResult<NhaCungCapModel>> Create(NhaCungCapModel nhaCungCapModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Supplier
-        [HttpPost]
-        public async Task<ActionResult<NhaCungCapModel>> Create(NhaCungCapModel nhaCungCapModel)
+        var result = await supplierService.CreateAsync(nhaCungCapModel);
+        if (!result.Success || result.Data == null)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Add(nhaCungCapModel);
-            await context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetById), new { id = nhaCungCapModel.Id_NhaCungCap }, nhaCungCapModel);
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        // PUT: api/Supplier/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, NhaCungCapModel nhaCungCapModel)
+        return CreatedAtAction(nameof(GetById), new { id = result.Data.Id_NhaCungCap }, result.Data);
+    }
+
+    // PUT: api/Supplier/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, NhaCungCapModel nhaSanXuatModel)
+    {
+        if (id != nhaSanXuatModel.Id_NhaCungCap)
         {
-            if (id != nhaCungCapModel.Id_NhaCungCap)
-            {
-                return BadRequest(new { message = "ID không khớp" });
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Entry(nhaCungCapModel).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NhaCungCapModelExists(id))
-                {
-                    return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(new { message = "ID không khớp" });
         }
 
-        // DELETE: api/Supplier/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        if (!ModelState.IsValid)
         {
-            var nhaCungCapModel = await context.NhaCungCaps.FindAsync(id);
-            if (nhaCungCapModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
-            }
-
-            context.NhaCungCaps.Remove(nhaCungCapModel);
-            await context.SaveChangesAsync();
-
-            return Ok(new { message = "Xóa thành công" });
+            return BadRequest(ModelState);
         }
 
-        private bool NhaCungCapModelExists(int id)
+        var result = await supplierService.UpdateAsync(nhaSanXuatModel);
+        if (!result.Success)
         {
-            return context.NhaCungCaps.Any(e => e.Id_NhaCungCap == id);
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhà cung cấp" });
         }
+
+        return NoContent();
+    }
+
+    // DELETE: api/Supplier/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await supplierService.DeleteAsync(id);
+        if (!result.Success)
+        {
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhà cung cấp" });
+        }
+
+        return Ok(new { message = "Xóa thành công" });
     }
 }

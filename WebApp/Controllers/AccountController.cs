@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using WebDungCuLamBanh.Components;
 using WebDungCuLamBanh.Models;
 using WebDungCuLamBanh.Services;
 using WebDungCuLamBanh.Helpers;
 
-namespace WebDungCuLamBanh.Controllers
+namespace WebDungCuLamBanh.Controllers;
+
+[ProfileStatusFilter]
+public class AccountController(ICustomerService customerService, ILogger<AccountController> logger) : Controller
 {
-    [ProfileStatusFilter]
-    public class AccountController(ICustomerService customerService, ILogger<AccountController> logger) : Controller
-    {
         // Sign In
         public IActionResult SignIn()
         {
@@ -19,6 +20,7 @@ namespace WebDungCuLamBanh.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("login")]
         public async Task<IActionResult> SignIn(KhachHangModel model, string password)
         {
             try
@@ -473,4 +475,3 @@ namespace WebDungCuLamBanh.Controllers
             return HttpContext.Session.GetString(key);
         }
     }
-}

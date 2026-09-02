@@ -1,117 +1,76 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
+using Microsoft.AspNetCore.Mvc;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.API
+namespace WebDungCuLamBanh.API;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AccountController(IStaffService staffService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AccountController : ControllerBase
+    // GET: api/Account
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<AdminModel>>> GetAdmins()
     {
-        private readonly AppDbContext _context;
+        var admins = await staffService.GetAllAsync();
+        return Ok(admins);
+    }
 
-        public AccountController(AppDbContext context)
+    // GET: api/Account/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AdminModel>> GetAdminModel(string id)
+    {
+        var adminModel = await staffService.GetByUsernameAsync(id);
+
+        if (adminModel == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // GET: api/Account
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminModel>>> GetAdmins()
+        return Ok(adminModel);
+    }
+
+    // PUT: api/Account/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutAdminModel(string id, AdminModel adminModel)
+    {
+        if (id != adminModel.TenNguoiDung)
         {
-            return await _context.Admins.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Account/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AdminModel>> GetAdminModel(string id)
+        var result = await staffService.UpdateAsync(adminModel);
+        if (!result.Success)
         {
-            var adminModel = await _context.Admins.FindAsync(id);
-
-            if (adminModel == null)
-            {
-                return NotFound();
-            }
-
-            return adminModel;
+            return NotFound();
         }
 
-        // PUT: api/Account/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdminModel(string id, AdminModel adminModel)
+        return NoContent();
+    }
+
+    // POST: api/Account
+    [HttpPost]
+    public async Task<ActionResult<AdminModel>> PostAdminModel(AdminModel adminModel)
+    {
+        var result = await staffService.CreateAsync(adminModel);
+        if (!result.Success)
         {
-            if (id != adminModel.TenNguoiDung)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(adminModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdminModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Conflict(new { message = result.ErrorMessage });
         }
 
-        // POST: api/Account
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<AdminModel>> PostAdminModel(AdminModel adminModel)
-        {
-            _context.Admins.Add(adminModel);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdminModelExists(adminModel.TenNguoiDung))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        return CreatedAtAction("GetAdminModel", new { id = adminModel.TenNguoiDung }, adminModel);
+    }
 
-            return CreatedAtAction("GetAdminModel", new { id = adminModel.TenNguoiDung }, adminModel);
+    // DELETE: api/Account/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAdminModel(string id)
+    {
+        var result = await staffService.DeleteAsync(id);
+        if (!result.Success)
+        {
+            return NotFound();
         }
 
-        // DELETE: api/Account/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAdminModel(string id)
-        {
-            var adminModel = await _context.Admins.FindAsync(id);
-            if (adminModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.Admins.Remove(adminModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool AdminModelExists(string id)
-        {
-            return _context.Admins.Any(e => e.TenNguoiDung == id);
-        }
+        return NoContent();
     }
 }

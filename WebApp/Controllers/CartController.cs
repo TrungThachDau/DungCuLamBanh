@@ -4,11 +4,11 @@ using WebDungCuLamBanh.Components;
 using WebDungCuLamBanh.Services;
 using WebDungCuLamBanh.Helpers;
 
-namespace WebDungCuLamBanh.Controllers
+namespace WebDungCuLamBanh.Controllers;
+
+[ProfileStatusFilter]
+public class CartController(ICartService cartService, ILogger<CartController> logger) : Controller
 {
-    [ProfileStatusFilter]
-    public class CartController(ICartService cartService, ILogger<CartController> logger) : Controller
-    {
         // Cart Index
         public async Task<IActionResult> Index(object MyData)
         {
@@ -284,4 +284,3 @@ namespace WebDungCuLamBanh.Controllers
             HttpContext.Session.Set(key, System.Text.Encoding.UTF8.GetBytes(value));
         }
     }
-}

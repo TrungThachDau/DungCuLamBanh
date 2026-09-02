@@ -307,5 +307,87 @@ namespace WebDungCuLamBanh.Services
             }
             return "Đã xảy ra lỗi từ phía chúng tôi.";
         }
+
+        // API & CRUD extensions
+        public async Task<IEnumerable<KhachHangModel>> GetAllCustomersAsync()
+        {
+            return await repository.Customers.ToListAsync();
+        }
+
+        public async Task<KhachHangModel?> GetCustomerByIdAsync(string id)
+        {
+            return await repository.FindAsync<KhachHangModel>(id);
+        }
+
+        public async Task<OperationResult<KhachHangModel>> CreateCustomerAsync(KhachHangModel model)
+        {
+            try
+            {
+                if (await CustomerExistsAsync(model.Id_KhachHang))
+                {
+                    return OperationResult<KhachHangModel>.FailureResult("Khách hàng đã tồn tại.");
+                }
+
+                await repository.AddAsync(model);
+                await repository.SaveChangesAsync();
+                return OperationResult<KhachHangModel>.SuccessResult(model);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult<KhachHangModel>.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<OperationResult> UpdateCustomerDetailsAsync(KhachHangModel model)
+        {
+            try
+            {
+                if (!await CustomerExistsAsync(model.Id_KhachHang))
+                {
+                    return OperationResult.FailureResult("Không tìm thấy khách hàng.");
+                }
+
+                await repository.UpdateAsync(model);
+                await repository.SaveChangesAsync();
+                return OperationResult.SuccessResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await CustomerExistsAsync(model.Id_KhachHang))
+                {
+                    return OperationResult.FailureResult("Không tìm thấy khách hàng.");
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<OperationResult> DeleteCustomerAsync(string id)
+        {
+            try
+            {
+                var customer = await repository.FindAsync<KhachHangModel>(id);
+                if (customer == null)
+                {
+                    return OperationResult.FailureResult("Không tìm thấy khách hàng.");
+                }
+
+                await repository.RemoveAsync(customer);
+                await repository.SaveChangesAsync();
+                return OperationResult.SuccessResult();
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.FailureResult(ex.Message);
+            }
+        }
+
+        public async Task<bool> CustomerExistsAsync(string id)
+        {
+            return await repository.Customers.AnyAsync(e => e.Id_KhachHang == id);
+        }
     }
 }

@@ -1,10 +1,9 @@
 using WebDungCuLamBanh.Models;
 
-namespace WebDungCuLamBanh.Repositories
+namespace WebDungCuLamBanh.Repositories;
+
+public interface IHomeRepository
 {
-    public interface IHomeRepository
-    {
-        IQueryable<BannerModel> Banners { get; }
-        IQueryable<DungCuModel> Products { get; }
-    }
+    IQueryable<BannerModel> Banners { get; }
+    IQueryable<DungCuModel> Products { get; }
 }

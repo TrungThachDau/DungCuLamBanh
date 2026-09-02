@@ -1,32 +1,42 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebDungCuLamBanh.Models;
 
-namespace WebDungCuLamBanh.Services
+namespace WebDungCuLamBanh.Services;
+
+public interface ICartService
 {
-    public interface ICartService
-    {
-        // Cart Operations
-        Task<DonHangModel?> GetUnpaidOrderAsync(string customerId);
-        Task<int> GetCartItemCountAsync(string orderId);
-        Task<List<ChiTietDonHangModel>> GetOrderDetailsAsync(string orderId);
-        Task<bool> AddToCartAsync(int productId, int quantity, string customerId);
-        Task<bool> UpdateQuantityAsync(int orderDetailId, int quantity, string customerId);
-        Task<bool> RemoveFromCartAsync(int orderDetailId, string customerId);
+    // Cart Operations
+    Task<DonHangModel?> GetUnpaidOrderAsync(string customerId);
+    Task<int> GetCartItemCountAsync(string orderId);
+    Task<List<ChiTietDonHangModel>> GetOrderDetailsAsync(string orderId);
+    Task<bool> AddToCartAsync(int productId, int quantity, string customerId);
+    Task<bool> UpdateQuantityAsync(int orderDetailId, int quantity, string customerId);
+    Task<bool> RemoveFromCartAsync(int orderDetailId, string customerId);
 
-        // Checkout
-        Task<(List<SelectListItem> paymentMethods, KhachHangModel? customer, DonHangModel? order)> GetCheckoutDataAsync(string customerId);
-        Task<decimal?> GetShippingRateAsync(string district);
+    // Checkout
+    Task<(List<SelectListItem> paymentMethods, KhachHangModel? customer, DonHangModel? order)> GetCheckoutDataAsync(string customerId);
+    Task<decimal?> GetShippingRateAsync(string district);
 
-        // Voucher
-        Task<bool> ApplyVoucherAsync(string voucherCode, string customerId);
+    // Voucher
+    Task<bool> ApplyVoucherAsync(string voucherCode, string customerId);
 
-        // Payment
-        Task<OrderDetailViewModel?> ProcessCODPaymentAsync(string customerId, string name, string phone, string email, string address, decimal shippingFee, decimal loyaltyPoints);
-        
-        // Email
-        Task SendOrderEmailAsync(OrderDetailViewModel orderDetail, string emailTo);
+    // Payment
+    Task<OrderDetailViewModel?> ProcessCODPaymentAsync(string customerId, string name, string phone, string email, string address, decimal shippingFee, decimal loyaltyPoints);
+    
+    // Email
+    Task SendOrderEmailAsync(OrderDetailViewModel orderDetail, string emailTo);
 
-        // Helper
-        Task<KhachHangModel?> GetCustomerAsync(string customerId);
-    }
+    // Helper
+    Task<KhachHangModel?> GetCustomerAsync(string customerId);
+
+    // API & CRUD extensions
+    Task<IEnumerable<DonHangModel>> GetAllOrdersAsync();
+    Task<List<ChiTietDonHangModel>?> GetUnpaidOrderDetailsByCustomerIdAsync(string customerId);
+    Task<decimal?> GetUnpaidOrderTotalAsync(string customerId);
+    Task<ChiTietDonHangModel?> GetOrderDetailByIdAsync(int id);
+    Task<OperationResult<ChiTietDonHangModel>> CreateOrderDetailAsync(ChiTietDonHangModel model);
+    Task<OperationResult> UpdateOrderDetailAsync(ChiTietDonHangModel model);
+    Task<OperationResult> DeleteOrderDetailAsync(int id);
+    Task<decimal> CalculateShippingForZoneAsync(string? zone);
+    Task<bool> OrderDetailExistsAsync(int? id);
 }

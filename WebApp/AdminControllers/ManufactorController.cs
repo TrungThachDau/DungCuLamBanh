@@ -1,150 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminControllers
+namespace WebDungCuLamBanh.AdminControllers;
+
+public class ManufactorController(IManufacturerService manufacturerService) : Controller
 {
-    public class ManufactorController(AppDbContext context) : Controller
+    // GET: Manufactor
+    public async Task<IActionResult> Index()
     {
-        // GET: Manufactor
-        public async Task<IActionResult> Index()
+        return View(await manufacturerService.GetAllAsync());
+    }
+
+    // GET: Manufactor/Details/5
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
         {
-            return View(await context.NhaSanXuats.ToListAsync());
+            return NotFound();
         }
 
-        // GET: Manufactor/Details/5
-        public async Task<IActionResult> Details(int? id)
+        var nhaSanXuatModel = await manufacturerService.GetByIdAsync(id.Value);
+        if (nhaSanXuatModel == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nhaSanXuatModel = await context.NhaSanXuats
-                .FirstOrDefaultAsync(m => m.Id_NhaSanXuat == id);
-            if (nhaSanXuatModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(nhaSanXuatModel);
+            return NotFound();
         }
 
-        // GET: Manufactor/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        return View(nhaSanXuatModel);
+    }
 
-        // POST: Manufactor/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id_NhaSanXuat,TenNSX,DiaChi,Email")] NhaSanXuatModel nhaSanXuatModel)
+    // GET: Manufactor/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Manufactor/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id_NhaSanXuat,TenNSX,DiaChi,Email")] NhaSanXuatModel nhaSanXuatModel)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            var result = await manufacturerService.CreateAsync(nhaSanXuatModel);
+            if (result.Success)
             {
-                context.Add(nhaSanXuatModel);
-                await context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(nhaSanXuatModel);
+        }
+        return View(nhaSanXuatModel);
+    }
+
+    // GET: Manufactor/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        // GET: Manufactor/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        var nhaSanXuatModel = await manufacturerService.GetByIdAsync(id.Value);
+        if (nhaSanXuatModel == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
+        return View(nhaSanXuatModel);
+    }
 
-            var nhaSanXuatModel = await context.NhaSanXuats.FindAsync(id);
-            if (nhaSanXuatModel == null)
-            {
-                return NotFound();
-            }
-            return View(nhaSanXuatModel);
+    // POST: Manufactor/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id_NhaSanXuat,TenNSX,DiaChi,Email")] NhaSanXuatModel nhaSanXuatModel)
+    {
+        if (id != nhaSanXuatModel.Id_NhaSanXuat)
+        {
+            return NotFound();
         }
 
-        // POST: Manufactor/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id_NhaSanXuat,TenNSX,DiaChi,Email")] NhaSanXuatModel nhaSanXuatModel)
+        if (ModelState.IsValid)
         {
-            if (id != nhaSanXuatModel.Id_NhaSanXuat)
+            var result = await manufacturerService.UpdateAsync(nhaSanXuatModel);
+            if (result.Success)
             {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    context.Update(nhaSanXuatModel);
-                    await context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!NhaSanXuatModelExists(nhaSanXuatModel.Id_NhaSanXuat))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(nhaSanXuatModel);
+            return NotFound();
         }
+        return View(nhaSanXuatModel);
+    }
 
-        // GET: Manufactor/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+    // GET: Manufactor/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nhaSanXuatModel = await context.NhaSanXuats
-                .FirstOrDefaultAsync(m => m.Id_NhaSanXuat == id);
-            if (nhaSanXuatModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(nhaSanXuatModel);
+            return NotFound();
         }
 
-        // POST: Manufactor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        var nhaSanXuatModel = await manufacturerService.GetByIdAsync(id.Value);
+        if (nhaSanXuatModel == null)
         {
-            var nhaSanXuatModel = await context.NhaSanXuats.FindAsync(id);
-            if (nhaSanXuatModel != null)
-            {
-                context.NhaSanXuats.Remove(nhaSanXuatModel);
-            }
-
-            await context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return NotFound();
         }
 
-        private bool NhaSanXuatModelExists(int id)
-        {
-            return context.NhaSanXuats.Any(e => e.Id_NhaSanXuat == id);
-        }
+        return View(nhaSanXuatModel);
+    }
+
+    // POST: Manufactor/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await manufacturerService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

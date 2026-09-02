@@ -1,117 +1,76 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
+using Microsoft.AspNetCore.Mvc;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.API
+namespace WebDungCuLamBanh.API;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CustomerController(ICustomerService customerService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CustomerController : ControllerBase
+    // GET: api/Customer
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<KhachHangModel>>> GetKhachHangs()
     {
-        private readonly AppDbContext _context;
+        var customers = await customerService.GetAllCustomersAsync();
+        return Ok(customers);
+    }
 
-        public CustomerController(AppDbContext context)
+    // GET: api/Customer/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<KhachHangModel>> GetKhachHangModel(string id)
+    {
+        var khachHangModel = await customerService.GetCustomerByIdAsync(id);
+
+        if (khachHangModel == null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // GET: api/Customer
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<KhachHangModel>>> GetKhachHangs()
+        return Ok(khachHangModel);
+    }
+    
+    // PUT: api/Customer/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutKhachHangModel(string id, KhachHangModel khachHangModel)
+    {
+        if (id != khachHangModel.Id_KhachHang)
         {
-            return await _context.KhachHangs.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Customer/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<KhachHangModel>> GetKhachHangModel(string id)
+        var result = await customerService.UpdateCustomerDetailsAsync(khachHangModel);
+        if (!result.Success)
         {
-            var khachHangModel = await _context.KhachHangs.FindAsync(id);
-
-            if (khachHangModel == null)
-            {
-                return NotFound();
-            }
-
-            return khachHangModel;
-        }
-        
-        // PUT: api/Customer/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutKhachHangModel(string id, KhachHangModel khachHangModel)
-        {
-            if (id != khachHangModel.Id_KhachHang)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(khachHangModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!KhachHangModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return NotFound();
         }
 
-        // POST: api/Customer
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<KhachHangModel>> PostKhachHangModel(KhachHangModel khachHangModel)
-        {
-            _context.KhachHangs.Add(khachHangModel);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (KhachHangModelExists(khachHangModel.Id_KhachHang))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        return NoContent();
+    }
 
-            return CreatedAtAction("GetKhachHangModel", new { id = khachHangModel.Id_KhachHang }, khachHangModel);
+    // POST: api/Customer
+    [HttpPost]
+    public async Task<ActionResult<KhachHangModel>> PostKhachHangModel(KhachHangModel khachHangModel)
+    {
+        var result = await customerService.CreateCustomerAsync(khachHangModel);
+        if (!result.Success)
+        {
+            return Conflict(new { message = result.ErrorMessage });
         }
 
-        // DELETE: api/Customer/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteKhachHangModel(string id)
+        return CreatedAtAction("GetKhachHangModel", new { id = khachHangModel.Id_KhachHang }, khachHangModel);
+    }
+
+    // DELETE: api/Customer/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteKhachHangModel(string id)
+    {
+        var result = await customerService.DeleteCustomerAsync(id);
+        if (!result.Success)
         {
-            var khachHangModel = await _context.KhachHangs.FindAsync(id);
-            if (khachHangModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.KhachHangs.Remove(khachHangModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
 
-        private bool KhachHangModelExists(string id)
-        {
-            return _context.KhachHangs.Any(e => e.Id_KhachHang == id);
-        }
+        return NoContent();
     }
 }

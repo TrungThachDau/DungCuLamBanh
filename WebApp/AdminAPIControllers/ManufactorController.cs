@@ -1,108 +1,89 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminAPIControllers
+namespace WebDungCuLamBanh.AdminAPIControllers;
+
+[ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Route("api/[controller]")]
+public class ManufactorController(IManufacturerService manufacturerService) : ControllerBase
 {
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class ManufactorController(AppDbContext context) : ControllerBase
+    // GET: api/Manufactor
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<NhaSanXuatModel>>> GetAll()
     {
-        // GET: api/Manufactor
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<NhaSanXuatModel>>> GetAll()
+        var items = await manufacturerService.GetAllAsync();
+        return Ok(items);
+    }
+
+    // GET: api/Manufactor/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<NhaSanXuatModel>> GetById(int id)
+    {
+        var nhaSanXuatModel = await manufacturerService.GetByIdAsync(id);
+        
+        if (nhaSanXuatModel == null)
         {
-            return await context.NhaSanXuats.ToListAsync();
+            return NotFound(new { message = "Không tìm thấy nhà sản xuất" });
         }
 
-        // GET: api/Manufactor/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NhaSanXuatModel>> GetById(int id)
-        {
-            var nhaSanXuatModel = await context.NhaSanXuats
-                .FirstOrDefaultAsync(m => m.Id_NhaSanXuat == id);
-            
-            if (nhaSanXuatModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhà sản xuất" });
-            }
+        return Ok(nhaSanXuatModel);
+    }
 
-            return nhaSanXuatModel;
+    // POST: api/Manufactor
+    [HttpPost]
+    public async Task<ActionResult<NhaSanXuatModel>> Create(NhaSanXuatModel nhaSanXuatModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Manufactor
-        [HttpPost]
-        public async Task<ActionResult<NhaSanXuatModel>> Create(NhaSanXuatModel nhaSanXuatModel)
+        var result = await manufacturerService.CreateAsync(nhaSanXuatModel);
+        if (!result.Success || result.Data == null)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Add(nhaSanXuatModel);
-            await context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetById), new { id = nhaSanXuatModel.Id_NhaSanXuat }, nhaSanXuatModel);
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        // PUT: api/Manufactor/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, NhaSanXuatModel nhaSanXuatModel)
+        return CreatedAtAction(nameof(GetById), new { id = result.Data.Id_NhaSanXuat }, result.Data);
+    }
+
+    // PUT: api/Manufactor/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, NhaSanXuatModel nhaSanXuatModel)
+    {
+        if (id != nhaSanXuatModel.Id_NhaSanXuat)
         {
-            if (id != nhaSanXuatModel.Id_NhaSanXuat)
-            {
-                return BadRequest(new { message = "ID không khớp" });
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Entry(nhaSanXuatModel).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NhaSanXuatModelExists(id))
-                {
-                    return NotFound(new { message = "Không tìm thấy nhà sản xuất" });
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(new { message = "ID không khớp" });
         }
 
-        // DELETE: api/Manufactor/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        if (!ModelState.IsValid)
         {
-            var nhaSanXuatModel = await context.NhaSanXuats.FindAsync(id);
-            if (nhaSanXuatModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhà sản xuất" });
-            }
-
-            context.NhaSanXuats.Remove(nhaSanXuatModel);
-            await context.SaveChangesAsync();
-
-            return Ok(new { message = "Xóa thành công" });
+            return BadRequest(ModelState);
         }
 
-        private bool NhaSanXuatModelExists(int id)
+        var result = await manufacturerService.UpdateAsync(nhaSanXuatModel);
+        if (!result.Success)
         {
-            return context.NhaSanXuats.Any(e => e.Id_NhaSanXuat == id);
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhà sản xuất" });
         }
+
+        return NoContent();
+    }
+
+    // DELETE: api/Manufactor/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await manufacturerService.DeleteAsync(id);
+        if (!result.Success)
+        {
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhà sản xuất" });
+        }
+
+        return Ok(new { message = "Xóa thành công" });
     }
 }

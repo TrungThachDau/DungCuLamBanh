@@ -7,7 +7,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=qldungcu;User Id=sa;Password=Android17x@;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=true;"
+      ConnectionStrings__DefaultConnection: "${DB_CONNECTION_STRING:?DB_CONNECTION_STRING is required}"
+      Jwt__Key: "${JWT_KEY:?JWT_KEY is required}"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -15,7 +16,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2025-latest
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Android17x@"
+      SA_PASSWORD: "${SA_PASSWORD:?SA_PASSWORD is required}"
       MSSQL_PID: "Developer"
     ports:
       - "1433:1433"

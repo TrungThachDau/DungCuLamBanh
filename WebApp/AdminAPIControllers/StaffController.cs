@@ -1,108 +1,89 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebDungCuLamBanh.Data;
 using WebDungCuLamBanh.Models;
+using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminAPIControllers
+namespace WebDungCuLamBanh.AdminAPIControllers;
+
+[ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Route("api/[controller]")]
+public class StaffController(IStaffService staffService) : ControllerBase
 {
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class StaffController(AppDbContext context) : ControllerBase
+    // GET: api/Staff
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<AdminModel>>> GetAll()
     {
-        // GET: api/Staff
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdminModel>>> GetAll()
+        var items = await staffService.GetAllAsync();
+        return Ok(items);
+    }
+
+    // GET: api/Staff/username
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AdminModel>> GetById(string id)
+    {
+        var adminModel = await staffService.GetByUsernameAsync(id);
+        
+        if (adminModel == null)
         {
-            return await context.Admins.ToListAsync();
+            return NotFound(new { message = "Không tìm thấy nhân viên" });
         }
 
-        // GET: api/Staff/username
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AdminModel>> GetById(string id)
-        {
-            var adminModel = await context.Admins
-                .FirstOrDefaultAsync(m => m.TenNguoiDung == id);
-            
-            if (adminModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhân viên" });
-            }
+        return Ok(adminModel);
+    }
 
-            return adminModel;
+    // POST: api/Staff
+    [HttpPost]
+    public async Task<ActionResult<AdminModel>> Create(AdminModel adminModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Staff
-        [HttpPost]
-        public async Task<ActionResult<AdminModel>> Create(AdminModel adminModel)
+        var result = await staffService.CreateAsync(adminModel);
+        if (!result.Success || result.Data == null)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Add(adminModel);
-            await context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetById), new { id = adminModel.TenNguoiDung }, adminModel);
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        // PUT: api/Staff/username
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, AdminModel adminModel)
+        return CreatedAtAction(nameof(GetById), new { id = result.Data.TenNguoiDung }, result.Data);
+    }
+
+    // PUT: api/Staff/username
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, AdminModel adminModel)
+    {
+        if (id != adminModel.TenNguoiDung)
         {
-            if (id != adminModel.TenNguoiDung)
-            {
-                return BadRequest(new { message = "ID không khớp" });
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            context.Entry(adminModel).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdminModelExists(id))
-                {
-                    return NotFound(new { message = "Không tìm thấy nhân viên" });
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(new { message = "ID không khớp" });
         }
 
-        // DELETE: api/Staff/username
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        if (!ModelState.IsValid)
         {
-            var adminModel = await context.Admins.FindAsync(id);
-            if (adminModel == null)
-            {
-                return NotFound(new { message = "Không tìm thấy nhân viên" });
-            }
-
-            context.Admins.Remove(adminModel);
-            await context.SaveChangesAsync();
-
-            return Ok(new { message = "Xóa thành công" });
+            return BadRequest(ModelState);
         }
 
-        private bool AdminModelExists(string id)
+        var result = await staffService.UpdateAsync(adminModel);
+        if (!result.Success)
         {
-            return context.Admins.Any(e => e.TenNguoiDung == id);
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhân viên" });
         }
+
+        return NoContent();
+    }
+
+    // DELETE: api/Staff/username
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var result = await staffService.DeleteAsync(id);
+        if (!result.Success)
+        {
+            return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy nhân viên" });
+        }
+
+        return Ok(new { message = "Xóa thành công" });
     }
 }

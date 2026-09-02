@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,30 +9,23 @@ using System.Text;
 using WebDungCuLamBanh.Models;
 using WebDungCuLamBanh.Services;
 
-namespace WebDungCuLamBanh.AdminAPIControllers
-{
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
-    public class AdministratorController : ControllerBase
-    {
-        private readonly IAdministratorService _administratorService;
-        private readonly IConfiguration _configuration;
+namespace WebDungCuLamBanh.AdminAPIControllers;
 
-        public AdministratorController(IAdministratorService administratorService, IConfiguration configuration)
-        {
-            _administratorService = administratorService;
-            _configuration = configuration;
-        }
+[ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Route("api/[controller]")]
+public class AdministratorController(IAdministratorService administratorService, IConfiguration configuration) : ControllerBase
+{
 
         // POST: api/Administrator/Login
         [HttpPost("Login")]
         [AllowAnonymous]
+        [EnableRateLimiting("login")]
         public async Task<IActionResult> Login(AdminModel adminModel)
         {
             try
             {
-                var admin = await _administratorService.AuthenticateAsync(adminModel);
+                var admin = await administratorService.AuthenticateAsync(adminModel);
                 if (admin != null && admin.Quyen == 1)
                 {
                     var token = GenerateJwtToken(admin);
@@ -62,7 +56,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Dashboard")]
         public async Task<IActionResult> GetDashboard([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
         {
-            var data = await _administratorService.GetDashboardAsync(fromDate ?? DateTime.MinValue, toDate ?? DateTime.MinValue);
+            var data = await administratorService.GetDashboardAsync(fromDate ?? DateTime.MinValue, toDate ?? DateTime.MinValue);
             return Ok(data);
         }
 
@@ -70,7 +64,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Product")]
         public async Task<ActionResult<IEnumerable<DungCuModel>>> GetProducts([FromQuery] string search = "")
         {
-            var products = await _administratorService.GetProductsAsync(search);
+            var products = await administratorService.GetProductsAsync(search);
             return Ok(products);
         }
 
@@ -83,7 +77,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _administratorService.CreateProductAsync(dungCuModel, imageInput);
+            var result = await administratorService.CreateProductAsync(dungCuModel, imageInput);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -106,7 +100,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _administratorService.UpdateProductAsync(dungCuModel, imageInput);
+            var result = await administratorService.UpdateProductAsync(dungCuModel, imageInput);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -119,7 +113,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("Product/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var result = await _administratorService.SoftDeleteProductAsync(id);
+            var result = await administratorService.SoftDeleteProductAsync(id);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -132,7 +126,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Category")]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await _administratorService.GetCategoriesAsync();
+            var categories = await administratorService.GetCategoriesAsync();
             return Ok(categories);
         }
 
@@ -140,7 +134,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("Category")]
         public async Task<IActionResult> CreateCategory([FromBody] string tenLoaiDungCu)
         {
-            var result = await _administratorService.CreateCategoryAsync(tenLoaiDungCu);
+            var result = await administratorService.CreateCategoryAsync(tenLoaiDungCu);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -153,7 +147,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("Category/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var result = await _administratorService.DeleteCategoryAsync(id);
+            var result = await administratorService.DeleteCategoryAsync(id);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -166,8 +160,8 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("SaleOff")]
         public async Task<IActionResult> GetSaleOffs()
         {
-            await _administratorService.ApplySaleOffAsync();
-            var saleOffs = await _administratorService.GetSaleOffsAsync();
+            await administratorService.ApplySaleOffAsync();
+            var saleOffs = await administratorService.GetSaleOffsAsync();
             return Ok(saleOffs);
         }
 
@@ -175,7 +169,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("SaleOff")]
         public async Task<IActionResult> CreateSaleOff(KhuyenMaiModel khuyenMai)
         {
-            var result = await _administratorService.CreateSaleOffAsync(khuyenMai);
+            var result = await administratorService.CreateSaleOffAsync(khuyenMai);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -188,7 +182,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("SaleOff/{id}")]
         public async Task<IActionResult> DeleteSaleOff(int id)
         {
-            await _administratorService.DeleteSaleOffAsync(id);
+            await administratorService.DeleteSaleOffAsync(id);
             return Ok(new { success = true, message = "Xóa khuyến mãi thành công" });
         }
 
@@ -196,7 +190,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("SaleOff/{id}/Products")]
         public async Task<IActionResult> GetSaleOffDetails(int id)
         {
-            var data = await _administratorService.GetSaleOffDetailAsync(id);
+            var data = await administratorService.GetSaleOffDetailAsync(id);
             return Ok(data);
         }
 
@@ -204,7 +198,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("SaleOff/AddProduct")]
         public async Task<IActionResult> AddProductToSaleOff(ChiTietKhuyenMaiModel chiTietKhuyenMai)
         {
-            var result = await _administratorService.AddProductToSaleOffAsync(chiTietKhuyenMai);
+            var result = await administratorService.AddProductToSaleOffAsync(chiTietKhuyenMai);
             if (!result.Success)
             {
                 return BadRequest(new { success = false, message = result.ErrorMessage });
@@ -216,7 +210,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("SaleOff/{idKhuyenMai}/Product/{idCTKM}")]
         public async Task<IActionResult> DeleteProductSaleOff(int idKhuyenMai, int idCTKM)
         {
-            await _administratorService.DeleteProductSaleOffAsync(idKhuyenMai, idCTKM);
+            await administratorService.DeleteProductSaleOffAsync(idKhuyenMai, idCTKM);
             return Ok(new { success = true, message = "Xóa sản phẩm khỏi khuyến mãi thành công" });
         }
 
@@ -224,7 +218,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("SaleOff/Apply")]
         public async Task<IActionResult> ApplySaleOff()
         {
-            var result = await _administratorService.ApplySaleOffAsync();
+            var result = await administratorService.ApplySaleOffAsync();
             if (!result.Success)
             {
                 return BadRequest(new { success = false, message = result.ErrorMessage });
@@ -237,7 +231,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Voucher")]
         public async Task<IActionResult> GetVouchers()
         {
-            var vouchers = await _administratorService.GetVouchersAsync();
+            var vouchers = await administratorService.GetVouchersAsync();
             return Ok(vouchers);
         }
 
@@ -245,7 +239,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("Voucher")]
         public async Task<IActionResult> CreateVoucher(MaGiamGiaModel maGiamGia)
         {
-            var result = await _administratorService.CreateVoucherAsync(maGiamGia);
+            var result = await administratorService.CreateVoucherAsync(maGiamGia);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -258,7 +252,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("Voucher/{id}")]
         public async Task<IActionResult> DeleteVoucher(string id)
         {
-            await _administratorService.DeleteVoucherAsync(id);
+            await administratorService.DeleteVoucherAsync(id);
             return Ok(new { success = true, message = "Xóa voucher thành công" });
         }
 
@@ -266,7 +260,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Orders")]
         public async Task<IActionResult> GetAllOrders()
         {
-            var data = await _administratorService.GetAllOrdersAsync();
+            var data = await administratorService.GetAllOrdersAsync();
             return Ok(data);
         }
 
@@ -274,7 +268,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Orders/NotDelivered")]
         public async Task<IActionResult> GetOrdersNotDelivered()
         {
-            var data = await _administratorService.GetOrdersNotDeliveredAsync();
+            var data = await administratorService.GetOrdersNotDeliveredAsync();
             return Ok(data);
         }
 
@@ -282,7 +276,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Orders/Delivered")]
         public async Task<IActionResult> GetOrdersDelivered()
         {
-            var data = await _administratorService.GetOrdersDeliveredAsync();
+            var data = await administratorService.GetOrdersDeliveredAsync();
             return Ok(data);
         }
 
@@ -290,7 +284,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Orders/{id}")]
         public async Task<IActionResult> GetOrderDetail(string id)
         {
-            var result = await _administratorService.GetOrderDetailAsync(id);
+            var result = await administratorService.GetOrderDetailAsync(id);
             if (!result.Success || result.Data?.ViewModel == null)
             {
                 return NotFound(new { message = result.ErrorMessage ?? "Không tìm thấy hóa đơn." });
@@ -303,7 +297,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("Banner")]
         public async Task<IActionResult> GetBanners()
         {
-            var banners = await _administratorService.GetBannersAsync();
+            var banners = await administratorService.GetBannersAsync();
             return Ok(banners);
         }
 
@@ -316,7 +310,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _administratorService.CreateBannerAsync(bannerModel, imageInput);
+            var result = await administratorService.CreateBannerAsync(bannerModel, imageInput);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -338,7 +332,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _administratorService.UpdateBannerAsync(bannerModel, imageInput);
+            var result = await administratorService.UpdateBannerAsync(bannerModel, imageInput);
             if (!result.Success)
             {
                 return BadRequest(new { message = result.ErrorMessage });
@@ -351,7 +345,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpDelete("Banner/{id}")]
         public async Task<IActionResult> DeleteBanner(int id)
         {
-            await _administratorService.DeleteBannerAsync(id);
+            await administratorService.DeleteBannerAsync(id);
             return Ok(new { success = true, message = "Xóa banner thành công" });
         }
 
@@ -359,7 +353,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpPost("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusRequest request)
         {
-            var result = await _administratorService.ChangeStatusAsync(request.Dhvc, request.Value);
+            var result = await administratorService.ChangeStatusAsync(request.Dhvc, request.Value);
             if (!result.Success)
             {
                 return BadRequest(new { success = false, error = result.ErrorMessage });
@@ -372,7 +366,7 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("EarningThisMonth")]
         public async Task<IActionResult> GetEarningThisMonth()
         {
-            var earnings = await _administratorService.GetEarningThisMonthAsync();
+            var earnings = await administratorService.GetEarningThisMonthAsync();
             return Ok(earnings);
         }
 
@@ -380,13 +374,13 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         [HttpGet("ProductFormOptions")]
         public async Task<IActionResult> GetProductFormOptions()
         {
-            var options = await _administratorService.GetProductFormOptionsAsync();
+            var options = await administratorService.GetProductFormOptionsAsync();
             return Ok(options);
         }
 
         private (string Token, DateTime Expires) GenerateJwtToken(AdminModel admin)
         {
-            var jwtSection = _configuration.GetSection("Jwt");
+            var jwtSection = configuration.GetSection("Jwt");
             var key = jwtSection["Key"] ?? throw new InvalidOperationException("JWT signing key is missing.");
             var expires = DateTime.UtcNow.AddMinutes(double.TryParse(jwtSection["AccessTokenMinutes"], out var minutes) ? minutes : 120);
 
@@ -418,4 +412,3 @@ namespace WebDungCuLamBanh.AdminAPIControllers
         public int Dhvc { get; set; }
         public int Value { get; set; }
     }
-}
