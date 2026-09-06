@@ -25,7 +25,7 @@
                         menu
                     </span>
                 </button>
-                <a style="margin-left:50px;" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="/logo/Whisk &Flourisk.svg" width="70px" /></a>
+                <a style="margin-left:50px;" class="navbar-brand" asp-area="Storefront" asp-controller="Home" asp-action="Index"><img src="/logo/Whisk &Flourisk.svg" width="70px" /></a>
                 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
@@ -51,10 +51,10 @@
                             </ul>
 
                         <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SaleOff">Giảm giá</a>
+                            <a class="nav-link text-dark" asp-area="Storefront" asp-controller="Home" asp-action="SaleOff">Giảm giá</a>
                         </li>
                         <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TrackingOrder">Tra cứu đơn hàng</a>
+                            <a class="nav-link text-dark" asp-area="Storefront" asp-controller="Home" asp-action="TrackingOrder">Tra cứu đơn hàng</a>
                         </li>
                         </li>
                         <li class="nav-item dropdown">
@@ -148,7 +148,7 @@
                                     <li><a class="dropdown-item text-dark" href="/Account/Edit/@ViewBag.uid">Quản lý tài khoản</a></li>
                                     <li><a class="dropdown-item text-dark" href="/Account/History/@ViewBag.uid">Lịch sử đơn hàng</a></li>
                                     <li><a class="dropdown-item text-dark" href="/Account/ChangePassword/@ViewBag.uid">Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="SignOut">Đăng xuất</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-area="Storefront" asp-controller="Account" asp-action="SignOut">Đăng xuất</a></li>
                                 </ul>
                             </div>
                         }

@@ -205,9 +205,17 @@ app.UseAuthorization();
 app.UseSession();
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
+app.MapControllers();
+
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "admin",
+    pattern: "Admin/{controller=Administrator}/{action=Index}/{id?}",
+    defaults: new { area = "Admin" });
+
+app.MapControllerRoute(
+    name: "storefront",
+    pattern: "{controller=Home}/{action=Index}/{id?}",
+    defaults: new { area = "Storefront" });
 
 app.Run();
 

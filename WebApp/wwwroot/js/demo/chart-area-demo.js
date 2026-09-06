@@ -24,7 +24,7 @@
 
     // AJAX call to fetch data
     $.ajax({
-        url: '/Administrator/GetEarningThisMonth', // Đường dẫn tới API của bạn
+        url: '/Admin/Administrator/GetEarningThisMonth', // Đường dẫn tới API của bạn
         method: 'GET',
         success: function (response) {
             // Parse the received data

@@ -20,7 +20,7 @@
             tinhTrang = "đã bị hủy.";
         }
         $.ajax({
-            url: '/Administrator/ChangeStatus',
+            url: '/Admin/Administrator/ChangeStatus',
             type: "POST",
             data: {
                 dhvc: dhvc,
